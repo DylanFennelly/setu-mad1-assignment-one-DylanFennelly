@@ -3,7 +3,7 @@ plugins {
     application
 }
 
-group = "org.setu.character"
+group = "org.setu.placemark"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -12,6 +12,9 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("org.slf4j:slf4j-simple:1.6.1")
+    implementation("io.github.microutils:kotlin-logging:1.6.22")
+    implementation("com.google.code.gson:gson:2.8.9")
 }
 
 tasks.test {
@@ -25,3 +28,4 @@ kotlin {
 application {
     mainClass.set("MainKt")
 }
+

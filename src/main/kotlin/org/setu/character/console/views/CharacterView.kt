@@ -1,9 +1,9 @@
 package org.setu.character.console.views
 
-import org.setu.character.console.models.PlacemarkModel
-import org.setu.character.console.models.PlacemarkStore
+import org.setu.character.console.models.CharacterModel
+import org.setu.character.console.models.CharacterStore
 
-class PlacemarkView {
+class CharacterView {
 
     fun menu() : Int {
 
@@ -27,21 +27,21 @@ class PlacemarkView {
         return option
     }
 
-    fun listPlacemarks(placemarks : PlacemarkStore) {
+    fun listPlacemarks(placemarks : CharacterStore) {
         println("List All Placemarks")
         println()
         placemarks.logAll()
         println()
     }
 
-    fun showPlacemark(placemark : PlacemarkModel?) {
+    fun showPlacemark(placemark : CharacterModel?) {
         if(placemark != null)
             println("Placemark Details [ $placemark ]")
         else
             println("Placemark Not Found...")
     }
 
-    fun addPlacemarkData(placemark : PlacemarkModel) : Boolean {
+    fun addPlacemarkData(placemark : CharacterModel) : Boolean {
 
         println()
         print("Enter a Title : ")
@@ -52,7 +52,7 @@ class PlacemarkView {
         return placemark.title.isNotEmpty() && placemark.description.isNotEmpty()
     }
 
-    fun updatePlacemarkData(placemark : PlacemarkModel) : Boolean {
+    fun updatePlacemarkData(placemark : CharacterModel) : Boolean {
 
         var tempTitle: String?
         var tempDescription: String?

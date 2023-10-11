@@ -9,26 +9,26 @@ private fun getId(): Long {
     return lastId++
 }
 
-class PlacemarkMemStore : PlacemarkStore {
+class CharacterMemStore : CharacterStore {
 
-    val placemarks = ArrayList<PlacemarkModel>()
+    val placemarks = ArrayList<CharacterModel>()
 
-    override fun findAll(): List<PlacemarkModel> {
+    override fun findAll(): List<CharacterModel> {
         return placemarks
     }
 
-    override fun findOne(id: Long) : PlacemarkModel? {
-        var foundPlacemark: PlacemarkModel? = placemarks.find { p -> p.id == id }
+    override fun findOne(id: Long) : CharacterModel? {
+        var foundPlacemark: CharacterModel? = placemarks.find { p -> p.id == id }
         return foundPlacemark
     }
 
-    override fun create(placemark: PlacemarkModel) {
+    override fun create(placemark: CharacterModel) {
         placemark.id = getId()
         placemarks.add(placemark)
         logAll()
     }
 
-    override fun update(placemark: PlacemarkModel) {
+    override fun update(placemark: CharacterModel) {
         var foundPlacemark = findOne(placemark.id!!)
         if (foundPlacemark != null) {
             foundPlacemark.title = placemark.title
@@ -40,7 +40,7 @@ class PlacemarkMemStore : PlacemarkStore {
         placemarks.forEach { logger.info("${it}") }
     }
 
-    override fun delete(placemark: PlacemarkModel) {
+    override fun delete(placemark: CharacterModel) {
         placemarks.remove(placemark)
     }
 }

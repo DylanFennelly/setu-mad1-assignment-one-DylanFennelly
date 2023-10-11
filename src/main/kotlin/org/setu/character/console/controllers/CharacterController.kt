@@ -1,16 +1,16 @@
 package org.setu.character.console.controllers
 
 import mu.KotlinLogging
-import org.setu.character.console.models.PlacemarkJSONStore
-import org.setu.character.console.models.PlacemarkModel
-import org.setu.character.console.views.PlacemarkView
+import org.setu.character.console.models.CharacterJSONStore
+import org.setu.character.console.models.CharacterModel
+import org.setu.character.console.views.CharacterView
 
-class PlacemarkController {
+class CharacterController {
 
-    //val placemarks = PlacemarkMemStore()
+    //val placemarks = CharacterMemStore()
 
-    val placemarks = PlacemarkJSONStore()
-    val placemarkView = PlacemarkView()
+    val placemarks = CharacterJSONStore()
+    val characterView = CharacterView()
     val logger = KotlinLogging.logger {}
 
     init {
@@ -36,31 +36,31 @@ class PlacemarkController {
         logger.info { "Shutting Down Placemark Console App" }
     }
 
-    fun menu() :Int { return placemarkView.menu() }
+    fun menu() :Int { return characterView.menu() }
 
     fun add(){
-        var aPlacemark = PlacemarkModel()
+        var aPlacemark = CharacterModel()
 
-        if (placemarkView.addPlacemarkData(aPlacemark))
+        if (characterView.addPlacemarkData(aPlacemark))
             placemarks.create(aPlacemark)
         else
             logger.info("Placemark Not Added: Title and/or Description was empty")
     }
 
     fun list() {
-        placemarkView.listPlacemarks(placemarks)
+        characterView.listPlacemarks(placemarks)
     }
 
     fun update() {
 
-        placemarkView.listPlacemarks(placemarks)
-        var searchId = placemarkView.getId()
+        characterView.listPlacemarks(placemarks)
+        var searchId = characterView.getId()
         val aPlacemark = search(searchId)
 
         if(aPlacemark != null) {
-            if(placemarkView.updatePlacemarkData(aPlacemark)) {
+            if(characterView.updatePlacemarkData(aPlacemark)) {
                 placemarks.update(aPlacemark)
-                placemarkView.showPlacemark(aPlacemark)
+                characterView.showPlacemark(aPlacemark)
                 logger.info("Placemark Updated : [ $aPlacemark ]")
             }
             else
@@ -71,8 +71,8 @@ class PlacemarkController {
     }
 
     fun delete(){
-        placemarkView.listPlacemarks(placemarks)
-        var searchId = placemarkView.getId()
+        characterView.listPlacemarks(placemarks)
+        var searchId = characterView.getId()
         val aPlacemark = search(searchId)
 
         if(aPlacemark != null) {
@@ -84,20 +84,20 @@ class PlacemarkController {
     }
 
     fun search() {
-        placemarkView.listPlacemarks(placemarks)
-        val aPlacemark = search(placemarkView.getId())
-        placemarkView.showPlacemark(aPlacemark)
+        characterView.listPlacemarks(placemarks)
+        val aPlacemark = search(characterView.getId())
+        characterView.showPlacemark(aPlacemark)
     }
 
 
-    fun search(id: Long) : PlacemarkModel? {
+    fun search(id: Long) : CharacterModel? {
         var foundPlacemark = placemarks.findOne(id)
         return foundPlacemark
     }
 
     fun dummyData() {
-        placemarks.create(PlacemarkModel(title = "New York New York", description = "So Good They Named It Twice"))
-        placemarks.create(PlacemarkModel(title= "Ring of Kerry", description = "Some place in the Kingdom"))
-        placemarks.create(PlacemarkModel(title = "Waterford City", description = "You get great Blaas Here!!"))
+        placemarks.create(CharacterModel(title = "New York New York", description = "So Good They Named It Twice"))
+        placemarks.create(CharacterModel(title= "Ring of Kerry", description = "Some place in the Kingdom"))
+        placemarks.create(CharacterModel(title = "Waterford City", description = "You get great Blaas Here!!"))
     }
 }

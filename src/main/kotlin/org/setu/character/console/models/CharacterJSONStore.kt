@@ -8,22 +8,21 @@ import org.setu.character.console.helpers.exists
 import org.setu.character.console.helpers.read
 import org.setu.character.console.helpers.write
 
-import org.setu.character.console.helpers.*
 import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
 val JSON_FILE = "placemarks.json"
 val gsonBuilder = GsonBuilder().setPrettyPrinting().create()
-val listType = object : TypeToken<java.util.ArrayList<PlacemarkModel>>() {}.type
+val listType = object : TypeToken<java.util.ArrayList<CharacterModel>>() {}.type
 
 fun generateRandomId(): Long {
     return Random().nextLong()
 }
 
-class PlacemarkJSONStore : PlacemarkStore {
+class CharacterJSONStore : CharacterStore {
 
-    var placemarks = mutableListOf<PlacemarkModel>()
+    var placemarks = mutableListOf<CharacterModel>()
 
     init {
         if (exists(JSON_FILE)) {
@@ -31,22 +30,22 @@ class PlacemarkJSONStore : PlacemarkStore {
         }
     }
 
-    override fun findAll(): MutableList<PlacemarkModel> {
+    override fun findAll(): MutableList<CharacterModel> {
         return placemarks
     }
 
-    override fun findOne(id: Long) : PlacemarkModel? {
-        var foundPlacemark: PlacemarkModel? = placemarks.find { p -> p.id == id }
+    override fun findOne(id: Long) : CharacterModel? {
+        var foundPlacemark: CharacterModel? = placemarks.find { p -> p.id == id }
         return foundPlacemark
     }
 
-    override fun create(placemark: PlacemarkModel) {
+    override fun create(placemark: CharacterModel) {
         placemark.id = generateRandomId()
         placemarks.add(placemark)
         serialize()
     }
 
-    override fun update(placemark: PlacemarkModel) {
+    override fun update(placemark: CharacterModel) {
         var foundPlacemark = findOne(placemark.id!!)
         if (foundPlacemark != null) {
             foundPlacemark.title = placemark.title
@@ -59,7 +58,7 @@ class PlacemarkJSONStore : PlacemarkStore {
         placemarks.forEach { logger.info("${it}") }
     }
 
-    override fun delete(placemark: PlacemarkModel) {
+    override fun delete(placemark: CharacterModel) {
         placemarks.remove(placemark)
         serialize()
     }

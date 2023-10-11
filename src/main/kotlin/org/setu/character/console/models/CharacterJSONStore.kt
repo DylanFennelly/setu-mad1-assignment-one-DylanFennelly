@@ -12,7 +12,7 @@ import java.util.*
 
 private val logger = KotlinLogging.logger {}
 
-val JSON_FILE = "placemarks.json"
+val JSON_FILE = "characters.json"
 val gsonBuilder = GsonBuilder().setPrettyPrinting().create()
 val listType = object : TypeToken<java.util.ArrayList<CharacterModel>>() {}.type
 
@@ -22,7 +22,7 @@ fun generateRandomId(): Long {
 
 class CharacterJSONStore : CharacterStore {
 
-    var placemarks = mutableListOf<CharacterModel>()
+    var characters = mutableListOf<CharacterModel>()
 
     init {
         if (exists(JSON_FILE)) {
@@ -31,45 +31,45 @@ class CharacterJSONStore : CharacterStore {
     }
 
     override fun findAll(): MutableList<CharacterModel> {
-        return placemarks
+        return characters
     }
 
     override fun findOne(id: Long) : CharacterModel? {
-        var foundPlacemark: CharacterModel? = placemarks.find { p -> p.id == id }
-        return foundPlacemark
+        var foundCharacter: CharacterModel? = characters.find { p -> p.id == id }
+        return foundCharacter
     }
 
-    override fun create(placemark: CharacterModel) {
-        placemark.id = generateRandomId()
-        placemarks.add(placemark)
+    override fun create(character: CharacterModel) {
+        character.id = generateRandomId()
+        characters.add(character)
         serialize()
     }
 
-    override fun update(placemark: CharacterModel) {
-        var foundPlacemark = findOne(placemark.id!!)
-        if (foundPlacemark != null) {
-            foundPlacemark.title = placemark.title
-            foundPlacemark.description = placemark.description
+    override fun update(character: CharacterModel) {
+        var foundCharacter = findOne(character.id!!)
+        if (foundCharacter != null) {
+            foundCharacter.title = character.title
+            foundCharacter.description = character.description
         }
         serialize()
     }
 
     override fun logAll() {
-        placemarks.forEach { logger.info("${it}") }
+        characters.forEach { logger.info("${it}") }
     }
 
-    override fun delete(placemark: CharacterModel) {
-        placemarks.remove(placemark)
+    override fun delete(character: CharacterModel) {
+        characters.remove(character)
         serialize()
     }
 
     private fun serialize() {
-        val jsonString = gsonBuilder.toJson(placemarks, listType)
+        val jsonString = gsonBuilder.toJson(characters, listType)
         write(JSON_FILE, jsonString)
     }
 
     private fun deserialize() {
         val jsonString = read(JSON_FILE)
-        placemarks = Gson().fromJson(jsonString, listType)
+        characters = Gson().fromJson(jsonString, listType)
     }
 }

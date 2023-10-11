@@ -9,13 +9,13 @@ class CharacterController {
 
     //val placemarks = CharacterMemStore()
 
-    val placemarks = CharacterJSONStore()
+    val characters = CharacterJSONStore()
     val characterView = CharacterView()
     val logger = KotlinLogging.logger {}
 
     init {
-        logger.info { "Launching Placemark Console App" }
-        println("Placemark Kotlin App Version 1.0")
+        logger.info { "Launching D&D Character Creator Console App" }
+        println("D&D Character Creator Kotlin App Version Alpha 0.3")
     }
 
     fun start() {
@@ -33,71 +33,71 @@ class CharacterController {
             }
             println()
         } while (input != -1)
-        logger.info { "Shutting Down Placemark Console App" }
+        logger.info { "Shutting Down D&D Character Creator Console App" }
     }
 
     fun menu() :Int { return characterView.menu() }
 
     fun add(){
-        var aPlacemark = CharacterModel()
+        var aCharacter = CharacterModel()
 
-        if (characterView.addPlacemarkData(aPlacemark))
-            placemarks.create(aPlacemark)
+        if (characterView.addPlacemarkData(aCharacter))
+            characters.create(aCharacter)
         else
-            logger.info("Placemark Not Added: Title and/or Description was empty")
+            logger.info("Character Not Added: Title and/or Description was empty")
     }
 
     fun list() {
-        characterView.listPlacemarks(placemarks)
+        characterView.listPlacemarks(characters)
     }
 
     fun update() {
 
-        characterView.listPlacemarks(placemarks)
+        characterView.listPlacemarks(characters)
         var searchId = characterView.getId()
-        val aPlacemark = search(searchId)
+        val aCharacter = search(searchId)
 
-        if(aPlacemark != null) {
-            if(characterView.updatePlacemarkData(aPlacemark)) {
-                placemarks.update(aPlacemark)
-                characterView.showPlacemark(aPlacemark)
-                logger.info("Placemark Updated : [ $aPlacemark ]")
+        if(aCharacter != null) {
+            if(characterView.updatePlacemarkData(aCharacter)) {
+                characters.update(aCharacter)
+                characterView.showPlacemark(aCharacter)
+                logger.info("Character Updated : [ $aCharacter ]")
             }
             else
-                logger.info("Placemark Not Updated: Title and/or Description was empty")
+                logger.info("Character Not Updated: Title and/or Description was empty")
         }
         else
-            println("No Placemark with ID $searchId found")
+            println("No Character with ID $searchId found")
     }
 
     fun delete(){
-        characterView.listPlacemarks(placemarks)
+        characterView.listPlacemarks(characters)
         var searchId = characterView.getId()
-        val aPlacemark = search(searchId)
+        val aCharacter = search(searchId)
 
-        if(aPlacemark != null) {
-                placemarks.delete(aPlacemark)
-                logger.info("Placemark Deleted : [ $aPlacemark ]")
+        if(aCharacter != null) {
+                characters.delete(aCharacter)
+                logger.info("Character Deleted : [ $aCharacter ]")
         }
         else
-            println("No Placemark with ID $searchId found")
+            println("No Character with ID $searchId found")
     }
 
     fun search() {
-        characterView.listPlacemarks(placemarks)
-        val aPlacemark = search(characterView.getId())
-        characterView.showPlacemark(aPlacemark)
+        characterView.listPlacemarks(characters)
+        val aCharacter = search(characterView.getId())
+        characterView.showPlacemark(aCharacter)
     }
 
 
     fun search(id: Long) : CharacterModel? {
-        var foundPlacemark = placemarks.findOne(id)
+        var foundPlacemark = characters.findOne(id)
         return foundPlacemark
     }
 
     fun dummyData() {
-        placemarks.create(CharacterModel(title = "New York New York", description = "So Good They Named It Twice"))
-        placemarks.create(CharacterModel(title= "Ring of Kerry", description = "Some place in the Kingdom"))
-        placemarks.create(CharacterModel(title = "Waterford City", description = "You get great Blaas Here!!"))
+        characters.create(CharacterModel(title = "New York New York", description = "So Good They Named It Twice"))
+        characters.create(CharacterModel(title= "Ring of Kerry", description = "Some place in the Kingdom"))
+        characters.create(CharacterModel(title = "Waterford City", description = "You get great Blaas Here!!"))
     }
 }

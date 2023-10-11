@@ -5,7 +5,7 @@
 
 Please fill in the following information and `commit` and `push`
 
-* Student Number: 
-* Name: 
-* GitHub username:
+* Student Number: 20093427
+* Name: Dylan Fennelly
+* GitHub username: DylanFennelly
 

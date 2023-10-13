@@ -1,11 +1,11 @@
 package org.setu.character.console.main
 
 import mu.KotlinLogging
-import org.setu.character.console.controllers.PlacemarkController
+import org.setu.character.console.controllers.CharacterController
 
 private val logger = KotlinLogging.logger {}
-var placemarkController = PlacemarkController()
+var characterController = CharacterController()
 
 fun main(args: Array<String>){
-    placemarkController.start()
+    characterController.start()
 }

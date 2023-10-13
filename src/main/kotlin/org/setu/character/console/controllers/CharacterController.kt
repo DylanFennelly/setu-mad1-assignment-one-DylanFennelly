@@ -7,8 +7,6 @@ import org.setu.character.console.views.CharacterView
 
 class CharacterController {
 
-    //val placemarks = CharacterMemStore()
-
     val characters = CharacterJSONStore()
     val characterView = CharacterView()
     val logger = KotlinLogging.logger {}
@@ -41,26 +39,26 @@ class CharacterController {
     fun add(){
         var aCharacter = CharacterModel()
 
-        if (characterView.addPlacemarkData(aCharacter))
+        if (characterView.addCharacterData(aCharacter))
             characters.create(aCharacter)
         else
             logger.info("Character Not Added: Title and/or Description was empty")
     }
 
     fun list() {
-        characterView.listPlacemarks(characters)
+        characterView.listCharacters(characters)
     }
 
     fun update() {
 
-        characterView.listPlacemarks(characters)
+        characterView.listCharacters(characters)
         var searchId = characterView.getId()
         val aCharacter = search(searchId)
 
         if(aCharacter != null) {
-            if(characterView.updatePlacemarkData(aCharacter)) {
+            if(characterView.updateCharacterData(aCharacter)) {
                 characters.update(aCharacter)
-                characterView.showPlacemark(aCharacter)
+                characterView.showCharacter(aCharacter)
                 logger.info("Character Updated : [ $aCharacter ]")
             }
             else
@@ -71,7 +69,7 @@ class CharacterController {
     }
 
     fun delete(){
-        characterView.listPlacemarks(characters)
+        characterView.listCharacters(characters)
         var searchId = characterView.getId()
         val aCharacter = search(searchId)
 
@@ -84,15 +82,15 @@ class CharacterController {
     }
 
     fun search() {
-        characterView.listPlacemarks(characters)
+        characterView.listCharacters(characters)
         val aCharacter = search(characterView.getId())
-        characterView.showPlacemark(aCharacter)
+        characterView.showCharacter(aCharacter)
     }
 
 
     fun search(id: Long) : CharacterModel? {
-        var foundPlacemark = characters.findOne(id)
-        return foundPlacemark
+        var foundCharacter = characters.findOne(id)
+        return foundCharacter
     }
 
     fun dummyData() {

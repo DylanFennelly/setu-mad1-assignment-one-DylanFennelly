@@ -3,7 +3,7 @@ plugins {
     application
 }
 
-group = "org.setu.placemark"
+group = "org.setu.character"
 version = "1.0-SNAPSHOT"
 
 repositories {

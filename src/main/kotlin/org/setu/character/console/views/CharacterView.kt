@@ -11,11 +11,11 @@ class CharacterView {
         var input: String?
 
         println("MAIN MENU")
-        println(" 1. Add Placemark")
-        println(" 2. Update Placemark")
-        println(" 3. List All Placemarks")
-        println(" 4. Search Placemarks")
-        println(" 5. Delete Placemark")
+        println(" 1. Add Character")
+        println(" 2. Update Character")
+        println(" 3. List All Characters")
+        println(" 4. Search Characters")
+        println(" 5. Delete Character")
         println("-1. Exit")
         println()
         print("Enter Option : ")
@@ -27,45 +27,45 @@ class CharacterView {
         return option
     }
 
-    fun listPlacemarks(placemarks : CharacterStore) {
-        println("List All Placemarks")
+    fun listCharacters(characters : CharacterStore) {
+        println("List All Characters")
         println()
-        placemarks.logAll()
+        characters.logAll()
         println()
     }
 
-    fun showPlacemark(placemark : CharacterModel?) {
-        if(placemark != null)
-            println("Placemark Details [ $placemark ]")
+    fun showCharacter(character : CharacterModel?) {
+        if(character != null)
+            println("Character Details [ $character ]")
         else
-            println("Placemark Not Found...")
+            println("Character Not Found...")
     }
 
-    fun addPlacemarkData(placemark : CharacterModel) : Boolean {
+    fun addCharacterData(character : CharacterModel) : Boolean {
 
         println()
         print("Enter a Title : ")
-        placemark.title = readln()!!
+        character.title = readln()!!
         print("Enter a Description : ")
-        placemark.description = readln()!!
+        character.description = readln()!!
 
-        return placemark.title.isNotEmpty() && placemark.description.isNotEmpty()
+        return character.title.isNotEmpty() && character.description.isNotEmpty()
     }
 
-    fun updatePlacemarkData(placemark : CharacterModel) : Boolean {
+    fun updateCharacterData(character : CharacterModel) : Boolean {
 
         var tempTitle: String?
         var tempDescription: String?
 
-        if (placemark != null) {
-            print("Enter a new Title for [ " + placemark.title + " ] : ")
+        if (character != null) {
+            print("Enter a new Title for [ " + character.title + " ] : ")
             tempTitle = readln()!!
-            print("Enter a new Description for [ " + placemark.description + " ] : ")
+            print("Enter a new Description for [ " + character.description + " ] : ")
             tempDescription = readln()!!
 
             if (!tempTitle.isNullOrEmpty() && !tempDescription.isNullOrEmpty()) {
-                placemark.title = tempTitle
-                placemark.description = tempDescription
+                character.title = tempTitle
+                character.description = tempDescription
                 return true
             }
         }

@@ -40,6 +40,8 @@ class CharacterController {
         var aCharacter = CharacterModel()
 
         if (characterView.addCharacterData(aCharacter))
+
+
             characters.create(aCharacter)
         else
             logger.info("Character Not Added: Title and/or Description was empty")
@@ -94,8 +96,8 @@ class CharacterController {
     }
 
     fun dummyData() {
-        characters.create(CharacterModel(title = "New York New York", description = "So Good They Named It Twice"))
-        characters.create(CharacterModel(title= "Ring of Kerry", description = "Some place in the Kingdom"))
-        characters.create(CharacterModel(title = "Waterford City", description = "You get great Blaas Here!!"))
+//        characters.create(CharacterModel(title = "New York New York", description = "So Good They Named It Twice"))
+//        characters.create(CharacterModel(title= "Ring of Kerry", description = "Some place in the Kingdom"))
+//        characters.create(CharacterModel(title = "Waterford City", description = "You get great Blaas Here!!"))
     }
 }

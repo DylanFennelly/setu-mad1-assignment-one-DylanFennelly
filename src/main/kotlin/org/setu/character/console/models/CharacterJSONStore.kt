@@ -46,11 +46,12 @@ class CharacterJSONStore : CharacterStore {
     }
 
     override fun update(character: CharacterModel) {
-        var foundCharacter = findOne(character.id!!)
-        if (foundCharacter != null) {
-            foundCharacter.title = character.title
-            foundCharacter.description = character.description
-        }
+        //TODO: Fix
+//        var foundCharacter = findOne(character.id!!)
+//        if (foundCharacter != null) {
+//            foundCharacter.title = character.title
+//            foundCharacter.description = character.description
+//        }
         serialize()
     }
 

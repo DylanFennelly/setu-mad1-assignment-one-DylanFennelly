@@ -14,5 +14,21 @@
     "maxHP": 0,
     "ac": 10,
     "background": "Outlander"
+  },
+  {
+    "id": 9218356089001388513,
+    "name": "\"Cyn\"",
+    "race": "Half-Elf",
+    "battleClass": "Ranger",
+    "level": 1,
+    "str": 10,
+    "dex": 16,
+    "con": 15,
+    "int": 8,
+    "wis": 16,
+    "cha": 8,
+    "maxHP": 12,
+    "ac": 10,
+    "background": "Criminal"
   }
 ]

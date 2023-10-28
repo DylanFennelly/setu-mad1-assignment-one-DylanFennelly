@@ -1,6 +1,7 @@
 package org.setu.character.console.controllers
 
 import mu.KotlinLogging
+import org.setu.character.console.helpers.calculateHP
 
 import org.setu.character.console.models.CharacterJSONStore
 import org.setu.character.console.models.CharacterModel
@@ -40,11 +41,10 @@ class CharacterController {
     fun add(){
         var aCharacter = CharacterModel()
 
-        if (characterView.addCharacterData(aCharacter))
-
-
+        if (characterView.addCharacterData(aCharacter)) {
+            aCharacter.maxHP = calculateHP(aCharacter.level, aCharacter.battleClass, aCharacter.con)
             characters.create(aCharacter)
-        else
+        }else
             logger.info("Character Not Added: Title and/or Description was empty")
     }
 

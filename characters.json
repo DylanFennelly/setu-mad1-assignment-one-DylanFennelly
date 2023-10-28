@@ -1,23 +1,23 @@
 [
   {
     "id": 5377281911035930374,
-    "name": "Rylanor",
-    "race": "Human",
-    "battleClass": "Barbarian",
-    "level": 1,
-    "str": 18,
-    "dex": 14,
-    "con": 16,
+    "name": "Zaan",
+    "race": "Half-Orc",
+    "battleClass": "Cleric",
+    "level": 3,
+    "str": 30,
+    "dex": 30,
+    "con": 18,
     "int": 7,
     "wis": 10,
     "cha": 8,
-    "maxHP": 0,
-    "ac": 10,
-    "background": "Outlander"
+    "maxHP": 30,
+    "ac": 17,
+    "background": "Acolyte"
   },
   {
     "id": 9218356089001388513,
-    "name": "\"Cyn\"",
+    "name": "Cyn",
     "race": "Half-Elf",
     "battleClass": "Ranger",
     "level": 1,
@@ -29,6 +29,22 @@
     "cha": 8,
     "maxHP": 12,
     "ac": 10,
-    "background": "Criminal"
+    "background": "Folk Hero"
+  },
+  {
+    "id": 747018093021143261,
+    "name": "Leona van der Vastenholt",
+    "race": "Human",
+    "battleClass": "Sorcerer",
+    "level": 1,
+    "str": 8,
+    "dex": 14,
+    "con": 14,
+    "int": 14,
+    "wis": 12,
+    "cha": 19,
+    "maxHP": 8,
+    "ac": 10,
+    "background": "Sage"
   }
 ]

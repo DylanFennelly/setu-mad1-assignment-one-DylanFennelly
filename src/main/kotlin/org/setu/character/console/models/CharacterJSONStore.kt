@@ -46,12 +46,22 @@ class CharacterJSONStore : CharacterStore {
     }
 
     override fun update(character: CharacterModel) {
-        //TODO: Fix
-//        var foundCharacter = findOne(character.id!!)
-//        if (foundCharacter != null) {
-//            foundCharacter.title = character.title
-//            foundCharacter.description = character.description
-//        }
+        val foundCharacter = findOne(character.id!!)
+        if (foundCharacter != null) {
+            foundCharacter.name = character.name
+            foundCharacter.race = character.race
+            foundCharacter.battleClass = character.battleClass
+            foundCharacter.level = character.level
+            foundCharacter.str = character.str
+            foundCharacter.dex = character.dex
+            foundCharacter.con = character.con
+            foundCharacter.int = character.int
+            foundCharacter.wis = character.wis
+            foundCharacter.cha = character.cha
+            foundCharacter.maxHP = character.maxHP
+            foundCharacter.ac = character.ac
+            foundCharacter.background = character.background
+        }
         serialize()
     }
 

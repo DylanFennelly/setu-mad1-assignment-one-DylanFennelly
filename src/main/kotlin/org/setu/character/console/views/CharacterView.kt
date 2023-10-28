@@ -1,5 +1,7 @@
 package org.setu.character.console.views
 
+import org.setu.character.console.helpers.validateByteToNum
+import org.setu.character.console.helpers.validateShortToNum
 import org.setu.character.console.models.CharacterModel
 import org.setu.character.console.models.CharacterStore
 
@@ -225,18 +227,78 @@ class CharacterView {
             println()
         } while (character.battleClass.isEmpty())
 
-        print("Enter Strength Score: ")
-        character.str = readln()!!.toByte()     //TODO: input validation on toByte - util class?
-        print("Enter Dexterity Score: ")
-        character.dex = readln()!!.toByte()
-        print("Enter Constitution Score: ")
-        character.con = readln()!!.toByte()
-        print("Enter Intelligence Score: ")
-        character.int = readln()!!.toByte()
-        print("Enter Wisdom Score: ")
-        character.wis = readln()!!.toByte()
-        print("Enter Charisma Score: ")
-        character.cha = readln()!!.toByte()
+        var scoreValidated = false
+        var tempScore: String
+        do{
+            print("Enter Strength Score: ")
+            tempScore = readln()!!
+            if (validateByteToNum(tempScore, 1, 30)){
+                scoreValidated = true
+                character.str = tempScore.toByte()
+            }else{
+                println("Invalid input: Ability score must be a valid number between 1 and 30.")
+            }
+        } while (!scoreValidated)
+
+        scoreValidated = false      //reset boolean
+        do{
+            print("Enter Dexterity Score: ")
+            tempScore = readln()!!
+            if (validateByteToNum(tempScore, 1, 30)){
+                scoreValidated = true
+                character.dex = tempScore.toByte()
+            }else{
+                println("Invalid input: Ability score must be a valid number between 1 and 30.")
+            }
+        } while (!scoreValidated)
+
+        scoreValidated = false
+        do{
+            print("Enter Constitution Score: ")
+            tempScore = readln()!!
+            if (validateByteToNum(tempScore, 1, 30)){
+                scoreValidated = true
+                character.con = tempScore.toByte()
+            }else{
+                println("Invalid input: Ability score must be a valid number between 1 and 30.")
+            }
+        } while (!scoreValidated)
+
+        scoreValidated = false
+        do{
+            print("Enter Intelligence Score: ")
+            tempScore = readln()!!
+            if (validateByteToNum(tempScore, 1, 30)){
+                scoreValidated = true
+                character.int = tempScore.toByte()
+            }else{
+                println("Invalid input: Ability score must be a valid number between 1 and 30.")
+            }
+        } while (!scoreValidated)
+
+        scoreValidated = false
+        do{
+            print("Enter Wisdom Score: ")
+            tempScore = readln()!!
+            if (validateByteToNum(tempScore, 1, 30)){
+                scoreValidated = true
+                character.wis = tempScore.toByte()
+            }else{
+                println("Invalid input: Ability score must be a valid number between 1 and 30.")
+            }
+        } while (!scoreValidated)
+
+        scoreValidated = false      //reset boolean
+        do{
+            print("Enter Charisma Score: ")
+            tempScore = readln()!!
+            if (validateByteToNum(tempScore, 1, 30)){
+                scoreValidated = true
+                character.cha = tempScore.toByte()
+            }else{
+                println("Invalid input: Ability score must be a valid number between 1 and 30.")
+            }
+        } while (!scoreValidated)
 
         do {
             val input: Int = listBackgrounds()
@@ -271,12 +333,7 @@ class CharacterView {
         do{
             print("Enter new character level: ")
             tempLevel = readln()!!
-            if (tempLevel.toByteOrNull() != null
-                && !tempLevel.isEmpty()
-                && tempLevel != "-1"
-                && tempLevel.toByteOrNull()!! > 0
-                && tempLevel.toByteOrNull()!! <= 20)    //character level cannot be less than 1 or greater than 20
-            {
+            if (validateByteToNum(tempLevel, 1, 20)){    //character level cannot be less than 1 or greater than 20{
                 levelValidated = true
                 character.level = tempLevel.toByte()
             }else if (tempLevel == "-1"){
@@ -318,12 +375,7 @@ class CharacterView {
             print("Enter new score value: ")
             tempScore = readln()!!
 
-            if (tempScore.toByteOrNull() != null
-                && !tempScore.isEmpty()
-                && tempScore != "-1"
-                && tempScore.toByteOrNull()!! > 0
-                && tempScore.toByteOrNull()!! <= 30) //Ability score cannot be below 1 or above 30
-            {
+            if (validateByteToNum(tempScore, 1, 30)){ //Ability score cannot be below 1 or above 30
                 scoreValidated = true
                 when (score){
                     "str" -> character.str = tempScore.toByte()
@@ -351,11 +403,7 @@ class CharacterView {
             print("Enter Armour Class value: ")
             tempAC = readln()!!
 
-            if (tempAC.toByteOrNull() != null
-                && !tempAC.isEmpty()
-                && tempAC != "-1"
-                && tempAC.toByteOrNull()!! > 0) //Armour class cannot be below 1
-            {
+            if (validateByteToNum(tempAC, 1, 127)){ //Armour class cannot be below 1
                 acValidated = true
                 character.ac = tempAC.toByte()
             }else if (tempAC == "-1"){
@@ -377,11 +425,7 @@ class CharacterView {
             print("Enter new max HP value: ")
             tempHP = readln()!!
 
-            if (tempHP.toShortOrNull() != null
-                && !tempHP.isEmpty()
-                && tempHP != "-1"
-                && tempHP.toShortOrNull()!! > 0) //Armour class cannot be below 1
-            {
+            if (validateShortToNum(tempHP, 1, 32767)){ //Armour class cannot be below 1
                 hpValidated = true
                 character.maxHP = tempHP.toShort()
             }else if (tempHP == "-1"){

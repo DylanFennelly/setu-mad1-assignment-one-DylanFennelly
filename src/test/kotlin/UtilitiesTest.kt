@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.setu.character.console.helpers.calculateHP
 import org.setu.character.console.helpers.calculateMod
+import org.setu.character.console.helpers.validateByteToNum
+import org.setu.character.console.helpers.validateShortToNum
 import org.setu.character.console.models.CharacterModel
 
 class UtilitiesTest {
@@ -39,5 +41,35 @@ class UtilitiesTest {
         assertEquals(17, calculateHP(3, "Wizard", 12), "Incorrect max HP")           //level 3 wizard, 12 con: 6 + 1 + (4+1) * 2 = 17   (level up case)
         assertEquals(345, calculateHP(20, "Barbarian", 30), "Incorrect max HP")      //level 20 barbarian, 30 con: 12 + 10 + (7+10)*19 = 345    (upper bound)
         assertEquals(3, calculateHP(3, "Sorcerer", 1), "Incorrect max HP")           //level 3 sorcerer, 1 con: 6 - 5 + [(4-5) -1 < 1? 1] * 2 = 3   (negative HP per level case - defaults to 1 hp per level)
+    }
+
+    @Test
+    fun testValidateByteToNum(){
+        assertTrue(validateByteToNum("12", 0, 127))     //standard case
+        assertTrue(validateByteToNum("0",0, 127))       //input same as lower - true
+        assertTrue(validateByteToNum("10", 0, 10))      //input same as upper - true
+        assertFalse(validateByteToNum("", 0 ,127))      //empty string - false
+        assertFalse(validateByteToNum("d12",0,127))     //invalid byte - false
+        assertFalse(validateByteToNum("-10", 0, 127))   //under lower - false
+        assertFalse(validateByteToNum("50", 0, 30))     //over upper - false
+
+        assertTrue(validateByteToNum("15"))                               //standard case
+        assertFalse(validateByteToNum(""))                                 //empty string - false
+        assertFalse(validateByteToNum("d12"))
+    }
+
+    @Test
+    fun testValidateShortToNum(){
+        assertTrue(validateShortToNum("12", 0, 127))     //standard case
+        assertTrue(validateShortToNum("0",0, 127))       //input same as lower - true
+        assertTrue(validateShortToNum("10", 0, 10))      //input same as upper - true
+        assertFalse(validateShortToNum("", 0 ,127))      //empty string - false
+        assertFalse(validateShortToNum("d12",0,127))     //invalid byte - false
+        assertFalse(validateShortToNum("-10", 0, 127))   //under lower - false
+        assertFalse(validateShortToNum("50", 0, 30))     //over upper - false
+
+        assertTrue(validateShortToNum("15"))                               //standard case
+        assertFalse(validateShortToNum(""))                                 //empty string - false
+        assertFalse(validateShortToNum("d12"))
     }
 }

@@ -56,3 +56,30 @@ fun calculateMod(abilityScore: Byte) : Byte{
 
     return mod.toInt().toByte()                     //actual recommended way for converting float to byte...
 }
+
+// Validates if input from string is valid to be transformed into Byte, with a lower and upper range (inclusive)
+fun validateByteToNum(score: String, lower: Byte, upper: Byte): Boolean{
+    return score.isNotEmpty() &&                //string is not empty
+            score.toByteOrNull() != null &&     //string can be converted to byte
+            score.toByteOrNull()!! >= lower &&  //byte is greater than/equal to lower
+            score.toByteOrNull()!! <= upper     //byte is less than/equal to upper
+}
+
+// Version of above method without upper and lower bounds
+fun validateByteToNum(score: String): Boolean{
+    return score.isNotEmpty() &&                //string is not empty
+            score.toByteOrNull() != null        //string can be converted to byte
+}
+
+
+fun validateShortToNum(score: String, lower: Short, upper: Short): Boolean{
+    return score.isNotEmpty() &&                //string is not empty
+            score.toShortOrNull() != null &&     //string can be converted to byte
+            score.toShortOrNull()!! >= lower &&  //byte is greater than/equal to lower
+            score.toShortOrNull()!! <= upper     //byte is less than/equal to upper
+}
+
+fun validateShortToNum(score: String): Boolean{
+    return score.isNotEmpty() &&                //string is not empty
+            score.toShortOrNull() != null    //string can be converted to byte
+}

@@ -44,6 +44,8 @@ class CharacterController {
         if (characterView.addCharacterData(aCharacter)) {
             aCharacter.maxHP = calculateHP(aCharacter.level, aCharacter.battleClass, aCharacter.con)
             characters.create(aCharacter)
+            characterView.showCharacter(aCharacter)
+            logger.info("Character Added : [ $aCharacter ]")
         }else
             logger.info("Character Not Added: Title and/or Description was empty")
     }

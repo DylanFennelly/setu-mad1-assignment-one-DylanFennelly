@@ -1,6 +1,7 @@
 package org.setu.character.console.controllers
 
 import mu.KotlinLogging
+
 import org.setu.character.console.models.CharacterJSONStore
 import org.setu.character.console.models.CharacterModel
 import org.setu.character.console.views.CharacterView

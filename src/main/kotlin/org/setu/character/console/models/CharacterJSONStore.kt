@@ -115,23 +115,35 @@ class CharacterJSONStore : CharacterStore, ItemStore {
     }
 
     override fun listAllItems(character: CharacterModel): List<ItemModel> {
-        TODO("Not yet implemented")
+        return character.items
     }
 
-    override fun findOneItem(id: Long): ItemModel? {
-        TODO("Not yet implemented")
+    override fun findOneItem(character: CharacterModel, index: Int): ItemModel {
+        return character.items[index]!!
     }
 
-    override fun addItemToCharacter(character: CharacterModel, itemModel: ItemModel) {
-        TODO("Not yet implemented")
+    override fun addItemToCharacter(character: CharacterModel, item: ItemModel) {
+        character.items.add(item)
+        serialize()
     }
 
-    override fun updateItem(character: CharacterModel, itemModel: ItemModel) {
-        TODO("Not yet implemented")
+    override fun updateItem(character: CharacterModel, item: ItemModel, index: Int) {
+        val foundItem = findOneItem(character, index)
+        if (foundItem != null){
+            foundItem.name = item.name
+            foundItem.itemType = item.itemType
+            foundItem.rarity = item.rarity
+            foundItem.desc = item.desc
+            foundItem.cost = item.cost
+            foundItem.attunement = item.attunement
+            foundItem.equipped = item.equipped
+        }
+        serialize()
     }
 
-    override fun deleteItem(character: CharacterModel, itemModel: ItemModel) {
-        TODO("Not yet implemented")
+    override fun deleteItem(character: CharacterModel, item: ItemModel) {
+        character.items.remove(item)
+        serialize()
     }
 
 

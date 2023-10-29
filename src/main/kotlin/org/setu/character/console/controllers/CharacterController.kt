@@ -125,101 +125,143 @@ class CharacterController {
     }
 
     fun update() {
+        val charsExist = characterView.listCharacters(characters)
+        if (charsExist) {
+            var searchId = characterView.getId()
+            val aCharacter = search(searchId)
 
-        characterView.listCharacters(characters)
-        var searchId = characterView.getId()
-        val aCharacter = search(searchId)
+            if (aCharacter != null) {
+                t.println(menuHeadingStyle("================    Update Character    ================"))
+                t.println(menuHeadingStyle("While entering values, enter '-1' to return to this menu"))
+                t.println(menuHeadingStyle("========================================================"))
+                do {
+                    t.println()
+                    t.println(green("============   Current character attributes   ============"))
+                    characterView.showCharacter(aCharacter)
+                    val input: Int = characterView.listUpdateOptions()
+                    when (input) {
+                        1 -> {
+                            if (updateLevel(aCharacter)) {
+                                updateCharacter(aCharacter)
+                                t.println(green("Level updated!"))
+                            }
+                        }
 
-        if(aCharacter != null) {
-            t.println(menuHeadingStyle("================    Update Character    ================"))
-            t.println(menuHeadingStyle("While entering values, enter '-1' to return to this menu"))
-            t.println(menuHeadingStyle("========================================================"))
-            do {
-                t.println()
-                t.println(green("============   Current character attributes   ============"))
-                characterView.showCharacter(aCharacter)
-                val input: Int = characterView.listUpdateOptions()
-                when(input) {
-                    1 -> {
-                        if(updateLevel(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Level updated!"))
+                        2 -> {
+                            if (characterView.updateCharacterName(aCharacter)) {
+                                updateCharacter(aCharacter)
+                                t.println(green("Name updated!"))
+                            }
                         }
-                    }
-                    2 -> {
-                        if(characterView.updateCharacterName(aCharacter)) {
-                            updateCharacter(aCharacter)
-                            t.println(green("Name updated!"))
+
+                        3 -> {
+                            if (updateRace(aCharacter)) {
+                                updateCharacter(aCharacter)
+                                t.println(green("Race updated!"))
+                            }
                         }
-                    }
-                    3 -> {
-                        if(updateRace(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Race updated!"))
+
+                        4 -> {
+                            if (updateClass(aCharacter)) {
+                                updateCharacter(aCharacter)
+                                t.println(green("Class updated!"))
+                            }
                         }
-                    }
-                    4 -> {
-                        if(updateClass(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Class updated!"))
+
+                        5 -> {
+                            if (updateAbilityScores(aCharacter)) {
+                                updateCharacter(aCharacter)
+                                t.println(green("Ability scores updated!"))
+                            }
                         }
-                    }
-                    5 -> {
-                        if(updateAbilityScores(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Ability scores updated!"))
+
+                        6 -> {
+                            if (updateBackground(aCharacter)) {
+                                updateCharacter(aCharacter)
+                                t.println(green("Background updated!"))
+                            }
                         }
-                    }
-                    6 -> {
-                        if(updateBackground(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Background updated!"))
+
+                        7 -> {
+                            if (updateAC(aCharacter)) {
+                                updateCharacter(aCharacter)
+                                t.println(green("Armour class updated!"))
+                            }
                         }
-                    }
-                    7 -> {
-                        if(updateAC(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Armour class updated!"))
+
+                        8 -> {
+                            if (updateHP(aCharacter)) {
+                                updateCharacter(aCharacter)
+
+                            }
                         }
+
+                        -1 -> {}        //empty function to prevent error message printing upon -1 entry
+                        else -> t.println(red("Error: Invalid option entered."))
                     }
-                    8 -> {
-                        if(updateHP(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Max HP updated!"))
-                        }
-                    }
-                    -1 -> {}        //empty function to prevent error message printing upon -1 entry
-                    else -> t.println(red("Error: Invalid option entered."))
-                }
-            } while (input != -1)
+                } while (input != -1)
+            } else
+                t.println(red("Error: No Character with ID $searchId found"))
         }
-        else
-            t.println(red("Error: No Character with ID $searchId found"))
     }
 
     fun delete(){
-        characterView.listCharacters(characters)
-        var searchId = characterView.getId()
-        val aCharacter = search(searchId)
+        val charsExist = characterView.listCharacters(characters)
+        if (charsExist) {
+            var searchId = characterView.getId()
+            val aCharacter = search(searchId)
 
-        if(aCharacter != null) {
-            characters.delete(aCharacter)
-            logger.info("Character Deleted : [ $aCharacter ]")
+            if (aCharacter != null) {
+                characterView.showCharacter(aCharacter)
+                t.println(red("Are you sure you want to delete this character? Deletion cannot be undone, and this character's data will be lost forever!"))
+                val exitConfirm = t.prompt(brightBlue("Delete character?"), choices = listOf("yes", "no"))
+                if (exitConfirm == "yes") {      //delete confirmation: must type character name to confirm deletion
+                    var matchingName: Boolean
+                    var typedName: String?
+                    do {
+                        typedName =
+                            t.prompt(brightBlue("Enter character name to confirm deletion (or type -1 to cancel deletion)"))
+                        matchingName = typedName.equals(aCharacter.name)
+                        if (!matchingName && !typedName.equals("-1")) {
+                            t.println(red("Error: Entered name does not match character name"))
+                        }
+                    } while (typedName != "-1" && !matchingName)
+                    if (matchingName) {
+                        characters.delete(aCharacter)
+                        t.println(rgb("#ff9393")("Character deleted."))
+                        logger.info("Character Deleted : [ $aCharacter ]")
+                    } else if (typedName.equals("-1")) {
+                        t.println(rgb("#ff9393")("Aborting character deletion..."))
+                        t.println(italic("${green(aCharacter.name)}: \"Phew, thought I was a goner!\""))
+                    }
+                } else {
+                    t.println(rgb("#ff9393")("Aborting character deletion..."))
+                    t.println(italic("${green(aCharacter.name)}: \"Phew, thought I was a goner!\""))
+                }
+            } else
+                t.println(red("Error: No Character with ID $searchId found"))
         }
-        else
-            t.println(red("Error: No Character with ID $searchId found"))
     }
 
     fun search() {
-        characterView.listCharacters(characters)
-        val aCharacter = search(characterView.getId())
-        characterView.showCharacter(aCharacter)
+        val charsExist = characterView.listCharacters(characters)
+        if (charsExist) {
+            val aCharacter = search(characterView.getId())
+
+            t.println()
+            characterView.showCharacter(aCharacter)
+        }
     }
 
 
     fun search(id: Long) : CharacterModel? {
-        var foundCharacter = characters.findOne(id)
-        return foundCharacter
+        if (id.toInt() != -1) {
+            var foundCharacter = characters.findOne(id)
+            return foundCharacter
+        }
+        t.println(rgb("#ff9393")("Returning..."))
+        return null
+
     }
 
     fun dummyData() {

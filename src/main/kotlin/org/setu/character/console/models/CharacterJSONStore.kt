@@ -35,8 +35,12 @@ class CharacterJSONStore : CharacterStore {
     }
 
     override fun findOne(id: Long) : CharacterModel? {
-        //var foundCharacter: CharacterModel? = characters.find { p -> p.id == id }
-        var foundCharacter: CharacterModel? = characters[id.toInt()]
+        var foundCharacter: CharacterModel? = characters.find { p -> p.id == id }
+        return foundCharacter
+    }
+
+    fun findOneByIndex(index: Long) : CharacterModel? {
+        var foundCharacter: CharacterModel? = characters[index.toInt()]
         return foundCharacter
     }
 
@@ -48,6 +52,26 @@ class CharacterJSONStore : CharacterStore {
 
     override fun update(character: CharacterModel) {
         val foundCharacter = findOne(character.id!!)
+        if (foundCharacter != null) {
+            foundCharacter.name = character.name
+            foundCharacter.race = character.race
+            foundCharacter.battleClass = character.battleClass
+            foundCharacter.level = character.level
+            foundCharacter.str = character.str
+            foundCharacter.dex = character.dex
+            foundCharacter.con = character.con
+            foundCharacter.int = character.int
+            foundCharacter.wis = character.wis
+            foundCharacter.cha = character.cha
+            foundCharacter.maxHP = character.maxHP
+            foundCharacter.ac = character.ac
+            foundCharacter.background = character.background
+        }
+        serialize()
+    }
+
+     fun update(character: CharacterModel, index: Long) {
+        val foundCharacter = findOneByIndex(index!!)
         if (foundCharacter != null) {
             foundCharacter.name = character.name
             foundCharacter.race = character.race
@@ -89,4 +113,6 @@ class CharacterJSONStore : CharacterStore {
         characters = mutableListOf()
         serialize()
     }
+
+
 }

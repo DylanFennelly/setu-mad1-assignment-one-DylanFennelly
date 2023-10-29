@@ -143,56 +143,56 @@ class CharacterController {
                     when (input) {
                         1 -> {
                             if (updateLevel(aCharacter)) {
-                                updateCharacter(aCharacter)
+                                updateCharacter(aCharacter, searchId)
                                 t.println(green("Level updated!"))
                             }
                         }
 
                         2 -> {
                             if (characterView.updateCharacterName(aCharacter)) {
-                                updateCharacter(aCharacter)
+                                updateCharacter(aCharacter, searchId)
                                 t.println(green("Name updated!"))
                             }
                         }
 
                         3 -> {
                             if (updateRace(aCharacter)) {
-                                updateCharacter(aCharacter)
+                                updateCharacter(aCharacter, searchId)
                                 t.println(green("Race updated!"))
                             }
                         }
 
                         4 -> {
                             if (updateClass(aCharacter)) {
-                                updateCharacter(aCharacter)
+                                updateCharacter(aCharacter, searchId)
                                 t.println(green("Class updated!"))
                             }
                         }
 
                         5 -> {
                             if (updateAbilityScores(aCharacter)) {
-                                updateCharacter(aCharacter)
+                                updateCharacter(aCharacter, searchId)
                                 t.println(green("Ability scores updated!"))
                             }
                         }
 
                         6 -> {
                             if (updateBackground(aCharacter)) {
-                                updateCharacter(aCharacter)
+                                updateCharacter(aCharacter, searchId)
                                 t.println(green("Background updated!"))
                             }
                         }
 
                         7 -> {
                             if (updateAC(aCharacter)) {
-                                updateCharacter(aCharacter)
+                                updateCharacter(aCharacter, searchId)
                                 t.println(green("Armour class updated!"))
                             }
                         }
 
                         8 -> {
                             if (updateHP(aCharacter)) {
-                                updateCharacter(aCharacter)
+                                updateCharacter(aCharacter, searchId)
 
                             }
                         }
@@ -247,20 +247,25 @@ class CharacterController {
     fun search() {
         val charsExist = characterView.listCharacters(characters)
         if (charsExist) {
-            val aCharacter = search(characterView.getId())
+            var searchId = characterView.getId()
+            val aCharacter = search(searchId)
 
-            t.println()
-            characterView.showCharacter(aCharacter)
+            if (aCharacter != null) {
+                t.println()
+                characterView.showCharacter(aCharacter)
+            }else
+                t.println(red("Error: No Character with ID $searchId found"))
         }
     }
 
 
     fun search(id: Long) : CharacterModel? {
-        if (id.toInt() != -1) {
-            var foundCharacter = characters.findOne(id)
+        if (id.toInt() != -1 && id.toInt() > -2 && id.toInt() < characters.characters.size) {     //validating against index out of bounds errors
+            var foundCharacter = characters.findOneByIndex(id)
             return foundCharacter
+        }else if (id.toInt() == -1) {       //if user request to go back
+            t.println(rgb("#ff9393")("Returning..."))
         }
-        t.println(rgb("#ff9393")("Returning..."))
         return null
     }
 
@@ -444,8 +449,8 @@ class CharacterController {
         logger.info("Character Added : [ $character ]")
     }
 
-    fun updateCharacter( character: CharacterModel){
-        characters.update(character)
+    fun updateCharacter( character: CharacterModel, index: Long){
+        characters.update(character, index)
         logger.info("Character Updated : [ $character ]")
         Thread.sleep(100)       //wait to prevent logger from printing in the middle of table prints
     }

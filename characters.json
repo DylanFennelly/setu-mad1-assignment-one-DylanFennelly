@@ -14,7 +14,26 @@
     "maxHP": 25,
     "ac": 10,
     "background": "Outlander",
-    "items": []
+    "items": [
+      {
+        "name": "Greatsword",
+        "itemType": "Weapon",
+        "rarity": "Common",
+        "desc": "Standard issue greatsword.",
+        "cost": 50,
+        "attunement": false,
+        "equipped": true
+      },
+      {
+        "name": "Bag of Holding",
+        "itemType": "Wonderous item",
+        "rarity": "Uncommon",
+        "desc": "This mysterious bag seems to have an infinitely large capacity",
+        "cost": 200,
+        "attunement": false,
+        "equipped": true
+      }
+    ]
   },
   {
     "id": 2731012547597339050,

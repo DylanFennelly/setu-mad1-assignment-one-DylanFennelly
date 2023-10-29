@@ -278,17 +278,20 @@ class CharacterView {
     }
 
     fun listCharactersItems(character: CharacterModel):Boolean{
+        val headerStyle = (green + bold)
         if (character.items.isNotEmpty()){
             t.println(table{            //creates table to display character attributes
                 align = TextAlign.CENTER
                 header {
-                    style(green, bold = true)
-                    row("ID","Name", "Type", "Rarity", "Cost (GP)", "Attuned", "Equipped")  }
+                    row(headerStyle("ID"),headerStyle("Name"), headerStyle("Type"), headerStyle("Rarity"), headerStyle("Cost (GP)"), headerStyle("Attuned"), headerStyle("Equipped"))  }
                 body {
                     character.items.forEachIndexed { index, item ->
                         row(green(index.toString()), item.name, item.itemType, item.rarity, item.cost, item.attunement, item.equipped)
                         row {cell("Decription") {columnSpan = 7} }
                         row { cell(item.desc) {columnSpan = 7} }
+                        if (index < character.items.size -1){   //if multiple items are being printed, add extra header row between entries to assist with readability
+                            row(headerStyle("ID"),headerStyle("Name"), headerStyle("Type"), headerStyle("Rarity"), headerStyle("Cost (GP)"), headerStyle("Attuned"), headerStyle("Equipped"))
+                        }
                     }
                 }
             })
@@ -299,16 +302,22 @@ class CharacterView {
         }
     }
 
-    fun showCharacter(character : CharacterModel?) {
-        if(character != null)
+    fun showCharacter(character : CharacterModel?, search: Boolean = false) {       //search boolean - displays character items if showCharacter is done as part of search
+        if(character != null){
             t.println(table{            //creates table to display character attributes
                 align = TextAlign.CENTER
                 header {
                     style(green,bold = true)
                     row("Name", "Race", "Class", "Level", "STR", "DEX", "CON", "INT", "WIS", "CHA", "Background", "Max HP", "AC", "No. Items")  }
                 body {
-                    row(character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac, character.items.size) }
+                    row(character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac, character.items.size)
+                }
             })
+            if (search){
+                t.println("===========    Inventory    ===========")
+                listCharactersItems(character)
+            }
+        }
         else
             t.println(red("Error: Character Not Found..."))
     }

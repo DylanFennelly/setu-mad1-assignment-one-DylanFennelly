@@ -257,7 +257,7 @@ class CharacterController {
 
             if (aCharacter != null) {
                 t.println()
-                characterView.showCharacter(aCharacter)
+                characterView.showCharacter(aCharacter, true)
             }else
                 t.println(red("Error: No Character with ID $searchId found"))
         }
@@ -312,8 +312,12 @@ class CharacterController {
     }
 
     fun dummyData() {
-        characters.create(CharacterModel(5377281911035930374, "Rylanor", "Half-Orc", "Barbarian", 1, 18, 14, 16, 7, 10, 8, 15, 10, "Outlander"))
-        characters.create(CharacterModel(9218356089001388513, "Cyn", "Half-Elf", "Ranger", 1, 10, 16, 15, 8, 12, 10, 12, 10, "Criminal"))
+        var character1 = CharacterModel(5377281911035930374, "Rylanor", "Human", "Barbarian", 1, 18, 14, 16, 7, 10, 8, 15, 10, "Outlander")
+        character1.items.add(ItemModel("Greatsword", "Weapon", "Common", "Standard issue greatsword.", 50u, false, true))
+        character1.items.add(ItemModel("Bag of Holding", "Wonderous item", "Uncommon", "This mysterious bag seems to have an infinitely large capacity", 200u, false, true))
+        characters.create(character1)
+        var character2 = CharacterModel(9218356089001388513, "Cyn", "Half-Elf", "Ranger", 2, 10, 16, 15, 8, 12, 10, 20, 10, "Criminal")
+        character2.items.add(ItemModel("Crossbow +2", "Weapon", "Rare","You have a +2 bonus to attack and damage rolls made with this magic weapon.", 2000u, true, true ))
         characters.create(CharacterModel(747018093021143261, "Leona van der Vastenholt", "Human", "Sorcerer", 1, 8, 14, 14, 14, 12, 19, 8, 10, "Sage"))
     }
 

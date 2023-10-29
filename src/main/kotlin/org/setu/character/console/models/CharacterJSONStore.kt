@@ -20,7 +20,7 @@ fun generateRandomId(): Long {
     return Random().nextLong()
 }
 
-class CharacterJSONStore : CharacterStore {
+class CharacterJSONStore : CharacterStore, ItemStore {
 
     var characters = mutableListOf<CharacterModel>()
 
@@ -35,8 +35,12 @@ class CharacterJSONStore : CharacterStore {
     }
 
     override fun findOne(id: Long) : CharacterModel? {
-        //var foundCharacter: CharacterModel? = characters.find { p -> p.id == id }
-        var foundCharacter: CharacterModel? = characters[id.toInt()]
+        var foundCharacter: CharacterModel? = characters.find { p -> p.id == id }
+        return foundCharacter
+    }
+
+    fun findOneByIndex(index: Long) : CharacterModel? {
+        var foundCharacter: CharacterModel? = characters[index.toInt()]
         return foundCharacter
     }
 
@@ -48,6 +52,26 @@ class CharacterJSONStore : CharacterStore {
 
     override fun update(character: CharacterModel) {
         val foundCharacter = findOne(character.id!!)
+        if (foundCharacter != null) {
+            foundCharacter.name = character.name
+            foundCharacter.race = character.race
+            foundCharacter.battleClass = character.battleClass
+            foundCharacter.level = character.level
+            foundCharacter.str = character.str
+            foundCharacter.dex = character.dex
+            foundCharacter.con = character.con
+            foundCharacter.int = character.int
+            foundCharacter.wis = character.wis
+            foundCharacter.cha = character.cha
+            foundCharacter.maxHP = character.maxHP
+            foundCharacter.ac = character.ac
+            foundCharacter.background = character.background
+        }
+        serialize()
+    }
+
+     fun update(character: CharacterModel, index: Long) {
+        val foundCharacter = findOneByIndex(index!!)
         if (foundCharacter != null) {
             foundCharacter.name = character.name
             foundCharacter.race = character.race
@@ -87,6 +111,38 @@ class CharacterJSONStore : CharacterStore {
 
     fun deleteAll(){        //deletes all data - USE CAREFULLY
         characters = mutableListOf()
+        serialize()
+    }
+
+    override fun listAllItems(character: CharacterModel): List<ItemModel> {
+        return character.items
+    }
+
+    override fun findOneItem(character: CharacterModel, index: Int): ItemModel {
+        return character.items[index]!!
+    }
+
+    override fun addItemToCharacter(character: CharacterModel, item: ItemModel) {
+        character.items.add(item)
+        serialize()
+    }
+
+    override fun updateItem(character: CharacterModel, item: ItemModel, index: Int) {
+        val foundItem = findOneItem(character, index)
+        if (foundItem != null){
+            foundItem.name = item.name
+            foundItem.itemType = item.itemType
+            foundItem.rarity = item.rarity
+            foundItem.desc = item.desc
+            foundItem.cost = item.cost
+            foundItem.attunement = item.attunement
+            foundItem.equipped = item.equipped
+        }
+        serialize()
+    }
+
+    override fun deleteItem(character: CharacterModel, item: ItemModel) {
+        character.items.remove(item)
         serialize()
     }
 }

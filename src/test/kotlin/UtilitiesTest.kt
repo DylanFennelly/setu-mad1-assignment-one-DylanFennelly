@@ -3,10 +3,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
-import org.setu.character.console.helpers.calculateHP
-import org.setu.character.console.helpers.calculateMod
-import org.setu.character.console.helpers.validateByteToNum
-import org.setu.character.console.helpers.validateShortToNum
+import org.setu.character.console.helpers.*
 import org.setu.character.console.models.CharacterModel
 
 class UtilitiesTest {
@@ -73,5 +70,22 @@ class UtilitiesTest {
         assertTrue(validateShortToNum("15"))                               //standard case
         assertFalse(validateShortToNum(""))                                 //empty string - false
         assertFalse(validateShortToNum("d12"))
+    }
+
+    @Test
+    fun testValidateUIntToNum(){
+        assertTrue(validateUIntToNum("12", 0, 127))     //standard case
+        assertTrue(validateUIntToNum("0",0, 127))       //input same as lower - true
+        assertTrue(validateUIntToNum("10", 0, 10))      //input same as upper - true
+        assertFalse(validateUIntToNum("", 0 ,127))      //empty string - false
+        assertFalse(validateUIntToNum("d12",0,127))     //invalid uint - false
+        assertFalse(validateUIntToNum("2", 5, 127))   //under lower - false
+        assertFalse(validateUIntToNum("50", 0, 30))     //over upper - false
+        assertFalse(validateUIntToNum("-2", -10, 127))     //signed int - false
+
+        assertTrue(validateUIntToNum("15"))                               //standard case
+        assertFalse(validateUIntToNum(""))                                 //empty string - false
+        assertFalse(validateUIntToNum("d12"))                               //invalid uint - false
+        assertFalse(validateUIntToNum("-2"))                                //signed int - false
     }
 }

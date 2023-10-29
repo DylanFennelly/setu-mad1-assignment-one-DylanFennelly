@@ -4,16 +4,36 @@
     "name": "Rylanor",
     "race": "Half-Orc",
     "battleClass": "Barbarian",
-    "level": 1,
+    "level": 2,
     "str": 18,
     "dex": 14,
     "con": 16,
     "int": 7,
     "wis": 10,
     "cha": 8,
-    "maxHP": 15,
+    "maxHP": 25,
     "ac": 10,
-    "background": "Outlander"
+    "background": "Outlander",
+    "items": [
+      {
+        "name": "Greatsword",
+        "itemType": "Weapon",
+        "rarity": "Common",
+        "desc": "Standard issue greatsword.",
+        "cost": 50,
+        "attunement": false,
+        "equipped": true
+      },
+      {
+        "name": "Bag of Holding",
+        "itemType": "Wonderous item",
+        "rarity": "Uncommon",
+        "desc": "This mysterious bag seems to have an infinitely large capacity",
+        "cost": 200,
+        "attunement": false,
+        "equipped": true
+      }
+    ]
   },
   {
     "id": 2731012547597339050,
@@ -29,7 +49,8 @@
     "cha": 10,
     "maxHP": 12,
     "ac": 10,
-    "background": "Criminal"
+    "background": "Criminal",
+    "items": []
   },
   {
     "id": -2207832459939051561,
@@ -45,6 +66,7 @@
     "cha": 19,
     "maxHP": 8,
     "ac": 10,
-    "background": "Sage"
+    "background": "Sage",
+    "items": []
   }
 ]

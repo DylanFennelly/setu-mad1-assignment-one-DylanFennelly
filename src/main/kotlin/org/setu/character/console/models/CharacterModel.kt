@@ -14,5 +14,6 @@ data class CharacterModel(
     var cha: Byte = 10,             //charisma
     var maxHP: Short = 0,           //max hit points, calculated from battleClass and constitution score
     var ac: Byte = 10,              //armour class
-    var background: String = ""     //character background
+    var background: String = "",     //character background
+    var items: MutableList<ItemModel> = mutableListOf() //character's list of items
 )

@@ -35,7 +35,8 @@ class CharacterJSONStore : CharacterStore {
     }
 
     override fun findOne(id: Long) : CharacterModel? {
-        var foundCharacter: CharacterModel? = characters.find { p -> p.id == id }
+        //var foundCharacter: CharacterModel? = characters.find { p -> p.id == id }
+        var foundCharacter: CharacterModel? = characters[id.toInt()]
         return foundCharacter
     }
 
@@ -82,5 +83,10 @@ class CharacterJSONStore : CharacterStore {
     private fun deserialize() {
         val jsonString = read(JSON_FILE)
         characters = Gson().fromJson(jsonString, listType)
+    }
+
+    fun deleteAll(){        //deletes all data - USE CAREFULLY
+        characters = mutableListOf()
+        serialize()
     }
 }

@@ -41,6 +41,8 @@ class UtilitiesTest {
         assertEquals(17, calculateHP(3, "Wizard", 12), "Incorrect max HP")           //level 3 wizard, 12 con: 6 + 1 + (4+1) * 2 = 17   (level up case)
         assertEquals(345, calculateHP(20, "Barbarian", 30), "Incorrect max HP")      //level 20 barbarian, 30 con: 12 + 10 + (7+10)*19 = 345    (upper bound)
         assertEquals(3, calculateHP(3, "Sorcerer", 1), "Incorrect max HP")           //level 3 sorcerer, 1 con: 6 - 5 + [(4-5) -1 < 1? 1] * 2 = 3   (negative HP per level case - defaults to 1 hp per level)
+        assertEquals(0, calculateHP(1, "Invalid", 10), "Incorrect max HP")           //Level 1 no class, 10 con = 0     (for if calculation is done before class assigned)
+        assertEquals(19, calculateHP(20, "Invalid", 10), "Incorrect max HP")         //Level 20 no class, 10 con = 0 + 1*19 = 19     (if level up would give 0 hp, defaults to 1)
     }
 
     @Test

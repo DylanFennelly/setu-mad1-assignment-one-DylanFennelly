@@ -77,12 +77,12 @@ class CharacterController {
 
             val input: Int = characterView.listAddOptions()
             when(input) {
-                1 -> characterView.enterCharacterName(aCharacter)
-                2 -> selectRace(aCharacter)
-                3 -> selectClass(aCharacter)
+                1 -> characterView.updateCharacterName(aCharacter)
+                2 -> updateRace(aCharacter)
+                3 -> updateClass(aCharacter)
                 4 -> updateLevel(aCharacter)
-                5 -> enterScores(aCharacter)
-                6 -> selectBackground(aCharacter)
+                5 -> updateAbilityScores(aCharacter)
+                6 -> updateBackground(aCharacter)
                 7 -> {
                     //checking that all attributes have been filled out, and showing which ones haven't if needed
                     val nameEntered = aCharacter.name != ""
@@ -120,7 +120,112 @@ class CharacterController {
         } while (!exitMenu)
     }
 
-    fun selectRace (character: CharacterModel) : Boolean {
+    fun list() {
+        characterView.listCharacters(characters)
+    }
+
+    fun update() {
+
+        characterView.listCharacters(characters)
+        var searchId = characterView.getId()
+        val aCharacter = search(searchId)
+
+        if(aCharacter != null) {
+            do {
+                t.println()
+                t.println(green("============   Current character attributes   ============"))
+                characterView.showCharacter(aCharacter)
+                val input: Int = characterView.listUpdateOptions()
+                when(input) {
+                    1 -> {
+                        if(updateLevel(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Level updated!"))
+                        }
+                    }
+                    2 -> {
+                        if(characterView.updateCharacterName(aCharacter)) {
+                            updateCharacter(aCharacter)
+                            t.println(green("Name updated!"))
+                        }
+                    }
+                    3 -> {
+                        if(updateRace(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Race updated!"))
+                        }
+                    }
+                    4 -> {
+                        if(updateClass(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Class updated!"))
+                        }
+                    }
+                    5 -> {
+                        if(updateAbilityScores(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Ability scores updated!"))
+                        }
+                    }
+                    6 -> {
+                        if(updateBackground(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Background updated!"))
+                        }
+                    }
+                    7 -> {
+                        if(updateAC(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Armour class updated!"))
+                        }
+                    }
+                    8 -> {
+                        if(updateHP(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Max HP updated!"))
+                        }
+                    }
+                    -1 -> {}        //empty function to prevent error message printing upon -1 entry
+                    else -> t.println(red("Error: Invalid option entered."))
+                }
+            } while (input != -1)
+        }
+        else
+            t.println(red("Error: No Character with ID $searchId found"))
+    }
+
+    fun delete(){
+        characterView.listCharacters(characters)
+        var searchId = characterView.getId()
+        val aCharacter = search(searchId)
+
+        if(aCharacter != null) {
+            characters.delete(aCharacter)
+            logger.info("Character Deleted : [ $aCharacter ]")
+        }
+        else
+            println("No Character with ID $searchId found")
+    }
+
+    fun search() {
+        characterView.listCharacters(characters)
+        val aCharacter = search(characterView.getId())
+        characterView.showCharacter(aCharacter)
+    }
+
+
+    fun search(id: Long) : CharacterModel? {
+        var foundCharacter = characters.findOne(id)
+        return foundCharacter
+    }
+
+    fun dummyData() {
+        characters.create(CharacterModel(5377281911035930374, "Rylanor", "Half-Orc", "Barbarian", 1, 18, 14, 16, 7, 10, 8, 15, 10, "Outlander"))
+        characters.create(CharacterModel(9218356089001388513, "Cyn", "Half-Elf", "Ranger", 1, 10, 16, 15, 8, 12, 10, 12, 10, "Criminal"))
+        characters.create(CharacterModel(747018093021143261, "Leona van der Vastenholt", "Human", "Sorcerer", 1, 8, 14, 14, 14, 12, 19, 8, 10, "Sage"))
+    }
+
+    fun updateRace (character: CharacterModel) : Boolean {
         var raceChosen = false
         do {
             val input: Int = characterView.listRaces()
@@ -142,7 +247,7 @@ class CharacterController {
         return raceChosen
     }
 
-    fun selectClass (character: CharacterModel): Boolean {
+    fun updateClass (character: CharacterModel): Boolean {
         var classChosen = false
         do {
             val input: Int = characterView.listClasses()
@@ -171,7 +276,7 @@ class CharacterController {
         return classChosen
     }
 
-    fun enterScores (character: CharacterModel): Boolean {
+    fun updateAbilityScores (character: CharacterModel): Boolean {
         var scoreUpdated = false
         var conUpdated = false
         do {
@@ -206,7 +311,7 @@ class CharacterController {
         return scoreUpdated
     }
 
-    fun selectBackground (character: CharacterModel): Boolean {
+    fun updateBackground (character: CharacterModel): Boolean {
         var bgUpdated = false
         do {
             val input: Int = characterView.listBackgrounds()
@@ -231,91 +336,6 @@ class CharacterController {
         return bgUpdated
     }
 
-    fun createCharacter( character: CharacterModel){
-        characters.create(character)
-        logger.info("Character Added : [ $character ]")
-    }
-
-    fun updateCharacter( character: CharacterModel){
-        characters.update(character)
-        logger.info("Character Updated : [ $character ]")
-        Thread.sleep(100)       //wait to prevent logger from printing in the middle of table prints
-    }
-
-    fun list() {
-        characterView.listCharacters(characters)
-    }
-
-    fun update() {
-
-        characterView.listCharacters(characters)
-        var searchId = characterView.getId()
-        val aCharacter = search(searchId)
-
-        if(aCharacter != null) {
-            do {
-                t.println()
-                t.println(green("============   Current character attributes   ============"))
-                characterView.showCharacter(aCharacter)
-                val input: Int = characterView.listUpdateOptions()
-                when(input) {
-                    1 -> {
-                        if(updateLevel(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Level updated!"))
-                        }
-                    }
-                    2 -> {
-                        if(characterView.enterCharacterName(aCharacter)) {
-                            updateCharacter(aCharacter)
-                            t.println(green("Name updated!"))
-                        }
-                    }
-                    3 -> {
-                        if(selectRace(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Race updated!"))
-                        }
-                    }
-                    4 -> {
-                        if(selectClass(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Class updated!"))
-                        }
-                    }
-                    5 -> {
-                        if(enterScores(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Ability scores updated!"))
-                        }
-                    }
-                    6 -> {
-                        if(selectBackground(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Background updated!"))
-                        }
-                    }
-                    7 -> {
-                        if(updateAC(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Armour class updated!"))
-                        }
-                    }
-                    8 -> {
-                        if(updateHP(aCharacter)){
-                            updateCharacter(aCharacter)
-                            t.println(green("Max HP updated!"))
-                        }
-                    }
-                    -1 -> {}        //empty function to prevent error message printing upon -1 entry
-                    else -> t.println(red("Error: Invalid option entered."))
-                }
-            } while (input != -1)
-        }
-        else
-            t.println(red("Error: No Character with ID $searchId found"))
-    }
-
     fun updateLevel (character: CharacterModel): Boolean {
         if (characterView.updateCharacterLevel(character)){
             character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //level change => HP increase/decrease => recalculate HP
@@ -337,34 +357,14 @@ class CharacterController {
         return false
     }
 
-    fun delete(){
-        characterView.listCharacters(characters)
-        var searchId = characterView.getId()
-        val aCharacter = search(searchId)
-
-        if(aCharacter != null) {
-                characters.delete(aCharacter)
-                logger.info("Character Deleted : [ $aCharacter ]")
-        }
-        else
-            println("No Character with ID $searchId found")
+    fun createCharacter( character: CharacterModel){
+        characters.create(character)
+        logger.info("Character Added : [ $character ]")
     }
 
-    fun search() {
-        characterView.listCharacters(characters)
-        val aCharacter = search(characterView.getId())
-        characterView.showCharacter(aCharacter)
-    }
-
-
-    fun search(id: Long) : CharacterModel? {
-        var foundCharacter = characters.findOne(id)
-        return foundCharacter
-    }
-
-    fun dummyData() {
-        characters.create(CharacterModel(5377281911035930374, "Rylanor", "Half-Orc", "Barbarian", 1, 18, 14, 16, 7, 10, 8, 15, 10, "Outlander"))
-        characters.create(CharacterModel(9218356089001388513, "Cyn", "Half-Elf", "Ranger", 1, 10, 16, 15, 8, 12, 10, 12, 10, "Criminal"))
-        characters.create(CharacterModel(747018093021143261, "Leona van der Vastenholt", "Human", "Sorcerer", 1, 8, 14, 14, 14, 12, 19, 8, 10, "Sage"))
+    fun updateCharacter( character: CharacterModel){
+        characters.update(character)
+        logger.info("Character Updated : [ $character ]")
+        Thread.sleep(100)       //wait to prevent logger from printing in the middle of table prints
     }
 }

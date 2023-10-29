@@ -207,7 +207,7 @@ class CharacterView {
         return true
     }
 
-    fun enterCharacterName(character: CharacterModel): Boolean {
+    fun updateCharacterName(character: CharacterModel): Boolean {
         var tempName : String?
         var nameValidated = false
         do{
@@ -224,8 +224,6 @@ class CharacterView {
         } while (!nameValidated)
         return true
     }
-
-
 
     fun updateCharacterScores(character: CharacterModel, score: String) {
         var tempScore : String?

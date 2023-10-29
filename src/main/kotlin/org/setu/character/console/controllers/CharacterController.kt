@@ -131,6 +131,9 @@ class CharacterController {
         val aCharacter = search(searchId)
 
         if(aCharacter != null) {
+            t.println(menuHeadingStyle("================    Update Character    ================"))
+            t.println(menuHeadingStyle("While entering values, enter '-1' to return to this menu"))
+            t.println(menuHeadingStyle("========================================================"))
             do {
                 t.println()
                 t.println(green("============   Current character attributes   ============"))
@@ -204,7 +207,7 @@ class CharacterController {
             logger.info("Character Deleted : [ $aCharacter ]")
         }
         else
-            println("No Character with ID $searchId found")
+            t.println(red("Error: No Character with ID $searchId found"))
     }
 
     fun search() {

@@ -167,7 +167,7 @@ class CharacterView {
     }
 
     fun listCharacters(characters : CharacterStore) {
-        println("List All Characters")
+        t.println(titleStyle("List All Character"))
         t.println(table{            //creates table to display character attributes
             align = TextAlign.CENTER
             column(0){
@@ -307,8 +307,7 @@ class CharacterView {
     fun getId() : Long {
         var strId : String? // String to hold user input
         var searchId : Long // Long to hold converted id
-        print("Enter id to Search/Update/Delete : ")
-        strId = readln()!!
+        strId = t.prompt(brightBlue("Enter character ID"))!!
         searchId = if (strId.toLongOrNull() != null && !strId.isEmpty())
             strId.toLong()
         else

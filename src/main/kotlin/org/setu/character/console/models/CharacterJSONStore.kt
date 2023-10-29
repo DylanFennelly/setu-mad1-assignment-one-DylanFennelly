@@ -35,7 +35,8 @@ class CharacterJSONStore : CharacterStore {
     }
 
     override fun findOne(id: Long) : CharacterModel? {
-        var foundCharacter: CharacterModel? = characters.find { p -> p.id == id }
+        //var foundCharacter: CharacterModel? = characters.find { p -> p.id == id }
+        var foundCharacter: CharacterModel? = characters[id.toInt()]
         return foundCharacter
     }
 

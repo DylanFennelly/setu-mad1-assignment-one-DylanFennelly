@@ -32,22 +32,6 @@
     "background": "Folk Hero"
   },
   {
-    "id": 747018093021143261,
-    "name": "Leona van der Vastenholt",
-    "race": "Human",
-    "battleClass": "Sorcerer",
-    "level": 1,
-    "str": 8,
-    "dex": 14,
-    "con": 14,
-    "int": 14,
-    "wis": 12,
-    "cha": 19,
-    "maxHP": 8,
-    "ac": 10,
-    "background": "Sage"
-  },
-  {
     "id": -3748322962876851972,
     "name": "Dash",
     "race": "Human",
@@ -80,19 +64,35 @@
     "background": "Outlander"
   },
   {
-    "id": -8518316646916490984,
-    "name": "Cyn",
-    "race": "Elf",
-    "battleClass": "Warlock",
+    "id": 7532391027170947830,
+    "name": "Rylanor",
+    "race": "Half-Orc",
+    "battleClass": "Barbarian",
     "level": 1,
-    "str": 10,
-    "dex": 10,
-    "con": 10,
-    "int": 10,
+    "str": 18,
+    "dex": 14,
+    "con": 16,
+    "int": 7,
     "wis": 10,
-    "cha": 10,
+    "cha": 8,
+    "maxHP": 15,
+    "ac": 10,
+    "background": "Outlander"
+  },
+  {
+    "id": 1525203357220144017,
+    "name": "Leona van der Vastenholt",
+    "race": "Human",
+    "battleClass": "Sorcerer",
+    "level": 1,
+    "str": 8,
+    "dex": 14,
+    "con": 14,
+    "int": 14,
+    "wis": 12,
+    "cha": 19,
     "maxHP": 8,
     "ac": 10,
-    "background": "Urchin"
+    "background": "Sage"
   }
 ]

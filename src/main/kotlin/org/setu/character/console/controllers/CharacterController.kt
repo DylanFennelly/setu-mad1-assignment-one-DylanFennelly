@@ -1,5 +1,7 @@
 package org.setu.character.console.controllers
 
+import com.github.ajalt.mordant.animation.textAnimation
+import com.github.ajalt.mordant.rendering.TextColors
 import mu.KotlinLogging
 import org.setu.character.console.helpers.calculateHP
 
@@ -7,15 +9,22 @@ import org.setu.character.console.models.CharacterJSONStore
 import org.setu.character.console.models.CharacterModel
 import org.setu.character.console.views.CharacterView
 
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.terminal.Terminal
+
 class CharacterController {
 
     val characters = CharacterJSONStore()
     val characterView = CharacterView()
     val logger = KotlinLogging.logger {}
+    val t = Terminal()
 
     init {
         logger.info { "Launching D&D Character Creator Console App" }
-        println("D&D Character Creator Kotlin App Version Alpha 0.3")
+        t.println(rgb("#b4eeb4")("D&D Character Creator Kotlin App Version 1.1"))
+
     }
 
     fun start() {

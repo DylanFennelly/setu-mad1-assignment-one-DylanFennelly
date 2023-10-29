@@ -39,7 +39,7 @@ class CharacterController {
  :---------::.    ==########=  *+####*+-.::.      
  
         """.trimIndent()))
-        t.println(menuHeadingStyle("=== Dungeons & Dragons Character Creator Kotlin App Version 1.1 ==="))
+        t.println(menuHeadingStyle("=== Dungeons & Dragons Character Creator Kotlin App Version 2.0 ==="))
 
     }
 

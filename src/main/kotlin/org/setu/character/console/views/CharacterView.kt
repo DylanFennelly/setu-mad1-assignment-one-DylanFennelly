@@ -21,7 +21,6 @@ class CharacterView {
         t.info.width = 150      //setting max terminal width to be wider to allow for tables to print fully
     }
     fun menu() : Int {
-
         var option : Int
         var input: String?
 
@@ -32,6 +31,8 @@ class CharacterView {
         t.println(" ${green("3.")} List All Characters")
         t.println(" ${green("4.")} Search Characters")
         t.println(" ${green("5.")} Delete Character")
+        t.println()
+        t.println(" ${green("6.")} Application Settings")
         t.println()
         t.println("${green(" -1.")} Exit Application")
         t.println()
@@ -166,9 +167,26 @@ class CharacterView {
         return option
     }
 
+    fun listSettingsMenu() : Int{
+        var option : Int
+        var input: String?
+
+        t.println(titleStyle("Application Settings"))
+        t.println(" ${green("1.")} Clear Save Data")
+        t.println()
+        t.println(" ${green("-1.")} Return to main menu")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
+        option = if (input.toIntOrNull() != null && !input.isEmpty())
+            input.toInt()
+        else
+            -9
+        return option
+    }
+
     fun listCharacters(characters : CharacterStore): Boolean {
         if (characters.findAll().isNotEmpty()){         //if there are characters to display
-            t.println(titleStyle("List All Character"))
+            t.println(titleStyle("List All Characters"))
             t.println(table{            //creates table to display character attributes
                 align = TextAlign.CENTER
                 column(0){

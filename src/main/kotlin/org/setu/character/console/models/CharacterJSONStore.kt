@@ -84,4 +84,9 @@ class CharacterJSONStore : CharacterStore {
         val jsonString = read(JSON_FILE)
         characters = Gson().fromJson(jsonString, listType)
     }
+
+    fun deleteAll(){        //deletes all data - USE CAREFULLY
+        characters = mutableListOf()
+        serialize()
+    }
 }

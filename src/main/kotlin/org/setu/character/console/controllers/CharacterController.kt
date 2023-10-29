@@ -45,13 +45,14 @@ class CharacterController {
 
     fun start() {
         do {
-            val input: Int = menu()         //TODO: make menu print once per run of the menu
+            val input: Int = menu()
             when(input) {
                 1 -> add()
                 2 -> update()
                 3 -> list()
                 4 -> search()
                 5 -> delete()
+                6 -> settings()
                 -99 -> dummyData()
                 -1 -> t.println(rgb("#ff9393")("Exiting Application..."))
                 else -> t.println(red("Error: Invalid option entered."))
@@ -261,7 +262,43 @@ class CharacterController {
         }
         t.println(rgb("#ff9393")("Returning..."))
         return null
+    }
 
+    fun settings(){
+        do {
+            val input: Int = characterView.listSettingsMenu()
+            when(input) {
+                1 -> deleteData()
+                -1 -> {}
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            t.println()
+        } while (input != -1)
+    }
+
+    fun deleteData(){       //clear characters.json
+        t.println(red("Are you sure you want to delete all character data? Deletion cannot be undone, and data will be lost forever!"))
+        val deleteConfirm = t.prompt(brightBlue("Delete all data?"), choices = listOf("yes", "no"))
+        if (deleteConfirm == "yes"){
+            var matching: Boolean
+            var typed: String?
+            do {
+                typed = t.prompt(brightBlue("Enter 'DELETE' to confirm deletion (or type -1 to cancel deletion)"))
+                matching = typed.equals("DELETE")
+                if (!matching && !typed.equals("-1")) {
+                    t.println(red("Error: Input does not match 'DELETE'"))
+                }
+                if (matching) {
+                    characters.deleteAll()
+                    t.println(rgb("#ff9393")("Data deleted."))
+                    logger.info("Character data deleted")
+                } else if (typed.equals("-1")) {
+                    t.println(rgb("#ff9393")("Aborting data deletion..."))
+                }
+            } while (typed != "-1" && !matching)
+        }else {
+            t.println(rgb("#ff9393")("Aborting data deletion..."))
+        }
     }
 
     fun dummyData() {

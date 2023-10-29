@@ -12,24 +12,39 @@ import org.setu.character.console.views.CharacterView
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 import com.github.ajalt.mordant.rendering.TextStyles.*
-import com.github.ajalt.mordant.terminal.Terminal
+import com.github.ajalt.mordant.terminal.Terminal       //https://github.com/ajalt/mordant
 
 class CharacterController {
 
     val characters = CharacterJSONStore()
     val characterView = CharacterView()
     val logger = KotlinLogging.logger {}
-    val t = Terminal()
+    val t = Terminal()      //Mordant terminal
+    var menuHeadingStyle = (rgb("#ff9393") + bold)
 
     init {
         logger.info { "Launching D&D Character Creator Console App" }
-        t.println(rgb("#b4eeb4")("D&D Character Creator Kotlin App Version 1.1"))
+        t.println(menuHeadingStyle("""
+                     -+*#*+=                      
+-+===--------:      ###-.:*## :+===--------:.     
+ :*############*=  :=++:. +##: :*############*=.  
+   +####*+++*#####: -+-+*+=++    =##*+++++*#####- 
+   =####-    :####+:*##*##**.    :-====:   .*####-
+   =####-     =#+::=#=:*#+-#*: :+*=++=-..   -####*
+   =####-     =#*=#:+==.=--+=-:*+-####=     -####*
+   =####-    -##:=####. :- -#*+= -=+++-    :#####:
+   =####*++*####-*####     .=+##+==*.-*--*######: 
+  .+###########+:=####+:.:=##*.#####=+##-####*-   
+ :---------::.    ==########=  *+####*+-.::.      
+ 
+        """.trimIndent()))
+        t.println(menuHeadingStyle("=== Dungeons & Dragons Character Creator Kotlin App Version 1.1 ==="))
 
     }
 
     fun start() {
         do {
-            val input: Int = menu()
+            val input: Int = menu()         //TODO: make menu print once per run of the menu
             when(input) {
                 1 -> add()
                 2 -> update()
@@ -37,8 +52,8 @@ class CharacterController {
                 4 -> search()
                 5 -> delete()
                 -99 -> dummyData()
-                -1 -> println("Exiting App")
-                else -> println("Invalid Option")
+                -1 -> t.println(rgb("#ff9393")("Exiting Application..."))
+                else -> t.println(red("Error: Invalid option entered."))
             }
             println()
         } while (input != -1)
@@ -49,15 +64,43 @@ class CharacterController {
 
     fun add(){
         var aCharacter = CharacterModel()
+        var exitMenu = false        //boolean to check if menu has been exited, flipped to true upon exit confirmation
+        t.println(menuHeadingStyle("==============    Create New Character    =============="))
+        t.println(menuHeadingStyle("While entering values, enter '-1' to return to this menu"))
+        t.println(menuHeadingStyle("========================================================"))
 
-        if (characterView.addCharacterData(aCharacter)) {
-            aCharacter.maxHP = calculateHP(aCharacter.level, aCharacter.battleClass, aCharacter.con)
-            characters.create(aCharacter)
-            characterView.showCharacter(aCharacter)
-            logger.info("Character Added : [ $aCharacter ]")
-        }else
-            logger.info("Character Not Added: Title and/or Description was empty")
+        do {
+            val input: Int = characterView.listAddOptions()
+            when(input) {
+                1 -> t.println("Name")
+                2 -> t.println("Race")
+                3 -> t.println("Class")
+                4 -> t.println("Ability Scores")
+                5 -> t.println("Background")
+                6 -> t.println("Create Character")
+                -1 -> {
+                    t.println(red("Are you sure you want to cancel character creation? All work done will be lost!"))
+                    val exitConfirm = t.prompt(brightBlue("Cancel character creation?"), choices = listOf("yes", "no"))
+                    if (exitConfirm == "yes"){
+                        t.println(rgb("#ff9393")("Aborting character creation..."))
+                        exitMenu = true
+                    }
+                }
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            println()
+        } while (!exitMenu)
+
+//        if (characterView.addCharacterData(aCharacter)) {
+//            aCharacter.maxHP = calculateHP(aCharacter.level, aCharacter.battleClass, aCharacter.con)
+//            characters.create(aCharacter)
+//            characterView.showCharacter(aCharacter)
+//            logger.info("Character Added : [ $aCharacter ]")
+//        }else
+//            logger.info("Character Not Added: Title and/or Description was empty")
     }
+
+
 
     fun list() {
         characterView.listCharacters(characters)

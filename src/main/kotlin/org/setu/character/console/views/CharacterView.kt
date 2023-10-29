@@ -5,23 +5,55 @@ import org.setu.character.console.helpers.validateShortToNum
 import org.setu.character.console.models.CharacterModel
 import org.setu.character.console.models.CharacterStore
 
+import com.github.ajalt.mordant.rendering.TextColors.*
+import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
+import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.terminal.Terminal
+
 class CharacterView {
+
+    val t = Terminal()
+    val titleStyle = (bold + underline)     //style for menu titles
 
     fun menu() : Int {
 
         var option : Int
         var input: String?
 
-        println("MAIN MENU")
-        println(" 1. Add Character")
-        println(" 2. Update Character")
-        println(" 3. List All Characters")
-        println(" 4. Search Characters")
-        println(" 5. Delete Character")
-        println("-1. Exit")
-        println()
-        print("Enter Option : ")
-        input = readln()!!
+        t.println()
+        t.println(titleStyle("Main Menu"))
+        t.println(" ${green("1.")} Add Character")
+        t.println(" ${green("2.")} Update Character")
+        t.println(" ${green("3.")} List All Characters")
+        t.println(" ${green("4.")} Search Characters")
+        t.println(" ${green("5.")} Delete Character")
+        t.println()
+        t.println("${green("-1.")} Exit Application")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
+
+        option = if (input.toIntOrNull() != null && input.isNotEmpty())
+            input.toInt()
+        else
+            -9
+        return option
+    }
+
+    fun listAddOptions() : Int{     //add menu
+        var option : Int
+        var input: String?
+
+        t.println(titleStyle("Select attribute to enter"))
+        t.println(" ${green("1.")} Name")
+        t.println(" ${green("2.")} Race")
+        t.println(" ${green("3.")} Class")
+        t.println(" ${green("4.")} Ability Scores")
+        t.println(" ${green("5.")} Background")
+        t.println()
+        t.println(" ${green("6.")} Create character")
+        t.println(" ${green("-1.")} Cancel character creation")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
         option = if (input.toIntOrNull() != null && !input.isEmpty())
             input.toInt()
         else
@@ -342,6 +374,24 @@ class CharacterView {
                 println("Invalid input: Character level must be a valid number between 1 and 20.")
             }
         } while (!levelValidated)
+
+        return true
+    }
+
+    fun enterCharacterName(character: CharacterModel): Boolean {
+        var tempName : String?
+        var nameValidated = false
+        do{
+            tempName = t.prompt(brightBlue("Enter Character Name"))!!
+            if (tempName.isNotEmpty() && tempName != "-1") {
+                nameValidated = true
+                character.name = tempName
+            }else if (tempName == "-1"){
+                return false
+            }else{
+                t.println(red("Error: Character name must not be empty."))
+            }
+        } while (!nameValidated)
 
         return true
     }

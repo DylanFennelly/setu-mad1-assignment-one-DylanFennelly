@@ -6,7 +6,7 @@ data class ItemModel(
     var rarity: String = "",            //item rarity (Common, Uncommon, Rare, Very rare, Legendary)
     var desc: String = "",              //item description
     var cost: UInt = 0u,                //item cost, unsigned integer (item cant cost negative) - https://kotlinlang.org/docs/unsigned-integer-types.html
-    var attunement: Boolean = false,    //if item requires attunement or not
+    var attunement: Boolean = false,    //if item requires attunement to or not
     var equipped: Boolean = false       //if item is equipped
 
 )

@@ -14,7 +14,17 @@
     "maxHP": 25,
     "ac": 10,
     "background": "Outlander",
-    "items": []
+    "items": [
+      {
+        "name": "Greatsword +1",
+        "itemType": "Weapon",
+        "rarity": "Uncommon",
+        "desc": "You have a +1 bonus to attack and damage rolls made with this magic weapon.",
+        "cost": 100,
+        "attunement": false,
+        "equipped": true
+      }
+    ]
   },
   {
     "id": 2731012547597339050,

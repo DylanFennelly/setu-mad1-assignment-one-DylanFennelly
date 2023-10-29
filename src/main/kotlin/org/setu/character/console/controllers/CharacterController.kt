@@ -13,6 +13,7 @@ import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal       //https://github.com/ajalt/mordant
+import org.setu.character.console.models.ItemModel
 
 class CharacterController {
 
@@ -195,6 +196,10 @@ class CharacterController {
                                 updateCharacter(aCharacter, searchId)
 
                             }
+                        }
+
+                        9 -> {
+                            itemsMenu(aCharacter)
                         }
 
                         -1 -> {}        //empty function to prevent error message printing upon -1 entry
@@ -453,5 +458,105 @@ class CharacterController {
         characters.update(character, index)
         logger.info("Character Updated : [ $character ]")
         Thread.sleep(100)       //wait to prevent logger from printing in the middle of table prints
+    }
+
+//items
+    fun itemsMenu(character: CharacterModel){
+        t.println()
+        t.println(menuHeadingStyle("===================   Manage Items   ==================="))
+        t.println(menuHeadingStyle("While entering values, enter '-1' to return to this menu"))
+        t.println(menuHeadingStyle("========================================================"))
+        do {
+            t.println(green("============   Current Inventory   ============"))
+            characterView.listCharactersItems(character)
+            val input: Int = characterView.listItemOptions()
+            when(input) {
+                1 -> addItem(character)
+                2 -> t.println("Update item")
+                3 -> t.println("Delete item")
+                -1 -> {}
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            t.println()
+        } while (input != -1)
+    }
+
+    fun addItem(character: CharacterModel){
+        var anItem = ItemModel()
+        var exitMenu = false        //boolean to check if menu has been exited, flipped to true upon exit confirmation
+        t.println(menuHeadingStyle("==============    Create New Character    =============="))
+        t.println(menuHeadingStyle("While entering values, enter '-1' to return to this menu"))
+        t.println(menuHeadingStyle("========================================================"))
+
+        do {
+            t.println()
+            t.println(green("============   Current item attributes   ============"))
+            characterView.showItem(anItem)
+
+            val input: Int = characterView.listItemAddOptions()
+            when(input) {
+                1 -> characterView.updateItemName(anItem)
+                2 -> characterView.updateItemType(anItem)
+                3 -> updateItemRarity(anItem)
+                4 -> characterView.updateItemDescription(anItem)
+                5 -> characterView.updateItemCost(anItem)
+                6 -> characterView.updateItemAttunement(anItem)
+                7 -> characterView.updateItemEquip(anItem)
+                8 -> {
+                    //checking that all attributes have been filled out, and showing which ones haven't if needed
+                    val nameEntered = anItem.name != ""
+                    val typeEntered = anItem.itemType != ""
+                    val rarityEntered = anItem.rarity != ""
+
+                    if(nameEntered && typeEntered && rarityEntered) {   //if all attributes have been filled out
+                        characterView.showItem(anItem)
+                        val exitConfirm = t.prompt(brightBlue("Create this item?"), choices = listOf("yes", "no"))
+                        if (exitConfirm == "yes") {
+                            createItem(character, anItem)
+                            exitMenu = true
+                            t.println(green("Item created!"))
+                        }
+                    }else{      //if not all attributes are filled out
+                        t.println(red("Error: The following character attribute fields are empty:"))
+                        if (!nameEntered) t.println(red("Name"))
+                        if (!typeEntered) t.println(red("Type"))
+                        if (!rarityEntered) t.println(red("Rarity"))
+                        t.println(red("Please fill out these attributes and try again."))
+                    }
+                }
+                -1 -> {
+                    t.println(red("Are you sure you want to cancel item creation? All work done will be lost!"))
+                    val exitConfirm = t.prompt(brightBlue("Cancel item creation?"), choices = listOf("yes", "no"))
+                    if (exitConfirm == "yes"){
+                        t.println(rgb("#ff9393")("Aborting item creation..."))
+                        exitMenu = true
+                    }
+                }
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+        } while (!exitMenu)
+    }
+
+    fun updateItemRarity (item: ItemModel) : Boolean {
+        var rarityChosen = false
+        do {
+            val input: Int = characterView.listItemRarites()
+            when(input){
+                1 -> {item.rarity = "Common"; rarityChosen = true}
+                2 -> {item.rarity = "Uncommon"; rarityChosen = true}
+                3 -> {item.rarity = "Rare"; rarityChosen = true}
+                4 -> {item.rarity = "Very Rare"; rarityChosen = true}
+                5 -> {item.rarity = "Legendary"; rarityChosen = true}
+                -1 -> t.println(rgb("#ff9393")("Returning..."))
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            t.println()
+        } while (input != -1 && !rarityChosen)    //loops menu until valid selection is made (race updated) or -1 is entered
+        return rarityChosen
+    }
+
+    fun createItem(character: CharacterModel, item: ItemModel){
+        characters.addItemToCharacter(character, item)
+        logger.info("Item Added to ${character.name} : [ $item ]")
     }
 }

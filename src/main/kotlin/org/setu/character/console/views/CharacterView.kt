@@ -11,6 +11,8 @@ import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
+import org.setu.character.console.helpers.validateUIntToNum
+import org.setu.character.console.models.ItemModel
 
 class CharacterView {
 
@@ -133,10 +135,11 @@ class CharacterView {
         var input: String?
 
         t.println(titleStyle("Select attribute to update"))
-        t.println(" ${green("1.")} Level        ${green("5.")} Ability Scores")
-        t.println(" ${green("2.")} Name         ${green("6.")} Background")
-        t.println(" ${green("3.")} Race         ${green("7.")} Armour Class")
-        t.println(" ${green("4.")} Class        ${green("8.")} Max HP Override")
+        t.println(" ${green("1.")} Level        ${green("6.")} Background")
+        t.println(" ${green("2.")} Name         ${green("7.")} Armour Class")
+        t.println(" ${green("3.")} Race         ${green("8.")} Max HP Override")
+        t.println(" ${green("4.")} Class        ${green("9.")} Manage Items")
+        t.println(" ${green("5.")} Ability Scores")
         t.println()
         t.println(" ${green("-1.")} Return to main menu")
         t.println()
@@ -184,6 +187,68 @@ class CharacterView {
         return option
     }
 
+    fun listItemOptions(): Int{
+        var option : Int
+        var input: String?
+
+        t.println(titleStyle("Manage Items"))
+        t.println(" ${green("1.")} Create New Item")
+        t.println(" ${green("2.")} Update Existing Item")
+        t.println(" ${green("3.")} Delete Item")
+        t.println()
+        t.println(" ${green("-1.")} Return to update menu")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
+        option = if (input.toIntOrNull() != null && !input.isEmpty())
+            input.toInt()
+        else
+            -9
+        return option
+    }
+
+    fun listItemAddOptions() : Int{     //add menu
+        var option : Int
+        var input: String?
+
+        t.println(titleStyle("Select item attribute"))
+        t.println(" ${green("1.")} Name")
+        t.println(" ${green("2.")} Type")
+        t.println(" ${green("3.")} Rarity")
+        t.println(" ${green("4.")} Description")
+        t.println(" ${green("5.")} Cost")
+        t.println(" ${green("6.")} Attunement")
+        t.println(" ${green("7.")} Equipped")
+        t.println()
+        t.println(" ${green("8.")} Create item")
+        t.println(" ${green("-1.")} Cancel item creation")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
+        option = if (input.toIntOrNull() != null && !input.isEmpty())
+            input.toInt()
+        else
+            -9
+        return option
+    }
+
+    fun listItemRarites() : Int{     //add menu
+        var option : Int
+        var input: String?
+
+        t.println(titleStyle("Select item rarity"))
+        t.println(" ${green("1.")} Common")
+        t.println(" ${green("2.")} ${brightGreen("Uncommon")}")
+        t.println(" ${green("3.")} ${brightBlue("Rare")}")
+        t.println(" ${green("4.")} ${magenta("Very Rare")}")
+        t.println(" ${green("5.")} ${yellow("Legendary")}")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
+        option = if (input.toIntOrNull() != null && !input.isEmpty())
+            input.toInt()
+        else
+            -9
+        return option
+    }
+
     fun listCharacters(characters : CharacterStore): Boolean {
         if (characters.findAll().isNotEmpty()){         //if there are characters to display
             t.println(titleStyle("List All Characters"))
@@ -208,19 +273,54 @@ class CharacterView {
         }
     }
 
+    fun listCharactersItems(character: CharacterModel){
+        if (character.items.isNotEmpty()){
+            t.println(table{            //creates table to display character attributes
+                align = TextAlign.CENTER
+                header {
+                    style(green, bold = true)
+                    row("ID","Name", "Type", "Rarity", "Cost", "Attuned", "Equipped")  }
+                body {
+                    character.items.forEachIndexed { index, item ->
+                        row(green(index.toString()), item.name, item.itemType, item.rarity, item.cost, item.attunement, item.equipped)
+                        row {cell("Decription") {columnSpan = 7} }
+                        row { cell(item.desc) {columnSpan = 7} }
+                    }
+                }
+            })
+        }
+    }
+
     fun showCharacter(character : CharacterModel?) {
         if(character != null)
             t.println(table{            //creates table to display character attributes
                 align = TextAlign.CENTER
                 header {
                     style(bold = true)
-                    row("Name", "Race", "Class", "Level", "STR", "DEX", "CON", "INT", "WIS", "CHA", "Background", "Max HP", "AC")  }
+                    row("Name", "Race", "Class", "Level", "STR", "DEX", "CON", "INT", "WIS", "CHA", "Background", "Max HP", "AC", "No. Items")  }
                 body {
                     style(green)
-                    row(character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac) }
+                    row(character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac, character.items.size) }
             })
         else
             t.println(red("Error: Character Not Found..."))
+    }
+
+    fun showItem(item : ItemModel?) {
+        if(item != null)
+            t.println(table{            //creates table to display item attributes
+                align = TextAlign.CENTER
+                header {
+                    style(bold = true)
+                    row("Name", "Type", "Rarity", "Cost", "Attuned", "Equipped") }
+                body {
+                    row(green(item.name), green(item.itemType), green(item.rarity), green(item.cost.toString()), green(item.attunement.toString()), green(item.equipped.toString()))
+                    row {cell("Decription") {columnSpan = 6} }
+                    row { cell(green(item.desc)) {columnSpan = 6} }
+                }
+            })
+        else
+            t.println(red("Error: Item Not Found..."))
     }
 
     //level up/down character
@@ -326,6 +426,103 @@ class CharacterView {
         return true
     }
 
+    fun updateItemName(item: ItemModel): Boolean {
+        var tempName : String?
+        var nameValidated = false
+        do{
+            tempName = t.prompt(brightBlue("Enter Item Name"))!!
+            if (tempName.isNotEmpty() && tempName != "-1") {
+                nameValidated = true
+                item.name = tempName
+            }else if (tempName == "-1"){
+                t.println(rgb("#ff9393")("Returning..."))
+                return false
+            }else{
+                t.println(red("Error: Item name must not be empty."))
+            }
+        } while (!nameValidated)
+        return true
+    }
+
+    fun updateItemType(item: ItemModel): Boolean {
+        var tempType : String?
+        var typeValidated = false
+        do{
+            tempType = t.prompt(brightBlue("Enter Item Type"))!!
+            if (tempType.isNotEmpty() && tempType != "-1") {
+                typeValidated = true
+                item.itemType = tempType
+            }else if (tempType == "-1"){
+                t.println(rgb("#ff9393")("Returning..."))
+                return false
+            }else{
+                t.println(red("Error: Item type must not be empty."))
+            }
+        } while (!typeValidated)
+        return true
+    }
+
+    fun updateItemDescription(item: ItemModel): Boolean {
+        var tempDesc : String?
+            tempDesc = t.prompt(brightBlue("Enter Item Description"))!!
+            if (tempDesc != "-1") {     //we don't care if description is empty
+                if (tempDesc.isEmpty()){
+                    t.println(red("No input was entered. This will clear the description. Do you want to clear the description?"))
+                    val clearConfirm = t.prompt(brightBlue("Clear description?"), choices = listOf("yes", "no"))
+                    if(clearConfirm == "yes") {
+                        item.desc = tempDesc
+                        return true
+                    }
+                }else{
+                    item.desc = tempDesc
+                    return true
+                }
+            }else{
+                t.println(rgb("#ff9393")("Returning..."))
+                return false
+            }
+        return false
+    }
+
+    fun updateItemCost(item: ItemModel):Boolean {
+        var tempCost : String?
+        var costValidated = false
+        do{
+            tempCost = t.prompt(brightBlue("Enter item cost (in GP)"))!!
+            if (validateUIntToNum(tempCost)){
+                costValidated = true
+                item.cost = tempCost.toUInt()
+            }else if (tempCost == "-1"){
+                t.println(rgb("#ff9393")("Returning..."))
+                return false
+            }else{
+                t.println(red("Invalid input: Item cost must be a valid number"))
+            }
+        } while (!costValidated)
+        return true
+    }
+
+    fun updateItemAttunement(item: ItemModel): Boolean{
+        val response = t.prompt(brightBlue("Does this item require?"), choices = listOf("yes", "no"))
+        return if (response == "yes"){
+            item.attunement = true
+            true
+        }else{
+            item.attunement = false
+            false
+        }
+    }
+
+    fun updateItemEquip(item: ItemModel): Boolean{
+        val response = t.prompt(brightBlue("Is this item currently equipped?"), choices = listOf("yes", "no"))
+        return if (response == "yes"){
+            item.equipped = true
+            true
+        }else{
+            item.equipped = false
+            false
+        }
+    }
 
     fun getId() : Long {
         var strId : String? // String to hold user input

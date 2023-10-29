@@ -145,6 +145,4 @@ class CharacterJSONStore : CharacterStore, ItemStore {
         character.items.remove(item)
         serialize()
     }
-
-
 }

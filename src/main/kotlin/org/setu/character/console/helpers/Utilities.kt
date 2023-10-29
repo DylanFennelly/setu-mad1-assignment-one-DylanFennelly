@@ -85,3 +85,16 @@ fun validateShortToNum(score: String): Boolean{
     return score.isNotEmpty() &&                //string is not empty
             score.toShortOrNull() != null    //string can be converted to byte
 }
+
+// Version of above method for unsigned integers
+fun validateUIntToNum(input: String, lower: Int, upper: Int): Boolean{
+    return input.isNotEmpty() &&                 //string is not empty
+            input.toUIntOrNull() != null &&      //string can be converted to unsigned int
+            input.toUIntOrNull()!! >= lower.toUInt() &&  //byte is greater than/equal to lower
+            input.toUIntOrNull()!! <= upper.toUInt()     //byte is less than/equal to upper
+}
+
+fun validateUIntToNum(input: String): Boolean{
+    return input.isNotEmpty() &&                 //string is not empty
+            input.toUIntOrNull() != null         //string can be converted to unsigned int
+}

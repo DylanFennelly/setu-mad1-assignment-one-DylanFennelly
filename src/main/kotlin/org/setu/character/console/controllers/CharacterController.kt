@@ -1,7 +1,6 @@
 package org.setu.character.console.controllers
 
-import com.github.ajalt.mordant.animation.textAnimation
-import com.github.ajalt.mordant.rendering.TextColors
+import com.github.ajalt.mordant.rendering.TextAlign
 import mu.KotlinLogging
 import org.setu.character.console.helpers.calculateHP
 
@@ -12,6 +11,7 @@ import org.setu.character.console.views.CharacterView
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal       //https://github.com/ajalt/mordant
 
 class CharacterController {
@@ -24,6 +24,7 @@ class CharacterController {
 
     init {
         logger.info { "Launching D&D Character Creator Console App" }
+        t.info.width = 120      //setting max terminal width to be wider to allow for tables to print fully - https://github.com/ajalt/mordant/issues/13
         t.println(menuHeadingStyle("""
                      -+*#*+=                      
 -+===--------:      ###-.:*## :+===--------:.     
@@ -55,7 +56,7 @@ class CharacterController {
                 -1 -> t.println(rgb("#ff9393")("Exiting Application..."))
                 else -> t.println(red("Error: Invalid option entered."))
             }
-            println()
+            t.println()
         } while (input != -1)
         logger.info { "Shutting Down D&D Character Creator Console App" }
     }
@@ -70,14 +71,42 @@ class CharacterController {
         t.println(menuHeadingStyle("========================================================"))
 
         do {
+            t.println()
+            t.println(green("============   Current character attributes   ============"))
+            characterView.showCharacter(aCharacter)
+
             val input: Int = characterView.listAddOptions()
             when(input) {
-                1 -> t.println("Name")
-                2 -> t.println("Race")
-                3 -> t.println("Class")
-                4 -> t.println("Ability Scores")
-                5 -> t.println("Background")
-                6 -> t.println("Create Character")
+                1 -> characterView.enterCharacterName(aCharacter)
+                2 -> selectRace(aCharacter)
+                3 -> selectClass(aCharacter)
+                4 -> updateLevel(aCharacter)
+                5 -> enterScores(aCharacter)
+                6 -> selectBackground(aCharacter)
+                7 -> {
+                    //checking that all attributes have been filled out, and showing which ones haven't if needed
+                    val nameEntered = aCharacter.name != ""
+                    val raceEntered = aCharacter.race != ""
+                    val classEntered = aCharacter.battleClass != ""
+                    val bgEntered = aCharacter.background != ""
+
+                    if(nameEntered && raceEntered && classEntered && bgEntered) {   //if all attributes have been filled out
+                        characterView.showCharacter(aCharacter)
+                        val exitConfirm = t.prompt(brightBlue("Create this character?"), choices = listOf("yes", "no"))
+                        if (exitConfirm == "yes") {
+                            createCharacter(aCharacter)
+                            exitMenu = true
+                            t.println(green("Character created!"))
+                        }
+                    }else{      //if not all attributes are filled out
+                        t.println(red("Error: The following character attribute fields are empty:"))
+                        if (!nameEntered) t.println(red("Name"))
+                        if (!raceEntered) t.println(red("Race"))
+                        if (!classEntered) t.println(red("Class"))
+                        if (!bgEntered) t.println(red("Background"))
+                        t.println(red("Please fill out these attributes and try again."))
+                    }
+                }
                 -1 -> {
                     t.println(red("Are you sure you want to cancel character creation? All work done will be lost!"))
                     val exitConfirm = t.prompt(brightBlue("Cancel character creation?"), choices = listOf("yes", "no"))
@@ -88,18 +117,117 @@ class CharacterController {
                 }
                 else -> t.println(red("Error: Invalid option entered."))
             }
-            println()
         } while (!exitMenu)
-
-//        if (characterView.addCharacterData(aCharacter)) {
-//            aCharacter.maxHP = calculateHP(aCharacter.level, aCharacter.battleClass, aCharacter.con)
-//            characters.create(aCharacter)
-//            characterView.showCharacter(aCharacter)
-//            logger.info("Character Added : [ $aCharacter ]")
-//        }else
-//            logger.info("Character Not Added: Title and/or Description was empty")
     }
 
+    fun selectRace (character: CharacterModel) {
+        var raceChosen = false
+        do {
+            val input: Int = characterView.listRaces()
+            when(input){
+                1 -> {character.race = "Dragonborn"; raceChosen = true}
+                2 -> {character.race = "Dwarf"; raceChosen = true}
+                3 -> {character.race = "Elf"; raceChosen = true}
+                4 -> {character.race = "Gnome"; raceChosen = true}
+                5 -> {character.race = "Half-Elf"; raceChosen = true}
+                6 -> {character.race = "Half-Orc"; raceChosen = true}
+                7 -> {character.race = "Halfling"; raceChosen = true}
+                8 -> {character.race = "Human"; raceChosen = true}
+                9 -> {character.race = "Tiefling"; raceChosen = true}
+                -1 -> t.println(rgb("#ff9393")("Returning..."))
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            t.println()
+        } while (input != -1 && !raceChosen)    //loops menu until valid selection is made (race updated) or -1 is entered
+    }
+
+    fun selectClass (character: CharacterModel) {
+        var classChosen = false
+        do {
+            val input: Int = characterView.listClasses()
+            when(input){
+                1 -> {character.battleClass = "Barbarian"; classChosen = true}
+                2 -> {character.battleClass = "Bard"; classChosen = true}
+                3 -> {character.battleClass = "Cleric"; classChosen = true}
+                4 -> {character.battleClass = "Druid"; classChosen = true}
+                5 -> {character.battleClass = "Fighter"; classChosen = true}
+                6 -> {character.battleClass = "Monk"; classChosen = true}
+                7 -> {character.battleClass = "Paladin"; classChosen = true}
+                8 -> {character.battleClass = "Ranger"; classChosen = true}
+                9 -> {character.battleClass = "Rouge"; classChosen = true}
+                10 -> {character.battleClass = "Sorcerer"; classChosen = true}
+                11 -> {character.battleClass = "Warlock"; classChosen = true}
+                12 -> {character.battleClass = "Wizard"; classChosen = true}
+                -1 -> t.println(rgb("#ff9393")("Returning..."))
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+        } while (input != -1 && !classChosen)
+
+        if (classChosen){
+            character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //class update => base HP updated => recalculate HP
+        }
+    }
+
+    fun enterScores (character: CharacterModel) {
+        var conUpdated = false
+        do {
+            t.println()
+            t.println(green("===========   Current ability scores   ==========="))
+            t.println(table{            //creates table to display ability scores
+                align = TextAlign.CENTER
+                header {
+                    style(bold = true)
+                    row("STR", "DEX", "CON", "INT", "WIS", "CHA", "Stat Total")  }
+                body {
+                    style(green)
+                    row(character.str, character.dex, character.con, character.int, character.wis, character.cha, character.str + character.dex + character.con + character.int + character.wis + character.cha) }
+            })
+
+            val input: Int = characterView.listAbilityScores()
+            when(input){
+                1 -> characterView.updateCharacterScores(character, "str")
+                2 -> characterView.updateCharacterScores(character, "dex")
+                3 -> {characterView.updateCharacterScores(character, "con"); conUpdated = true}
+                4 -> characterView.updateCharacterScores(character, "int")
+                5 -> characterView.updateCharacterScores(character, "wis")
+                6 -> characterView.updateCharacterScores(character, "cha")
+                -1 -> {}        //empty function to prevent error message printing upon -1 entry
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            if (conUpdated) {
+                character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //con update => modifier changed => recalculate HP
+            }
+        } while (input != -1 )
+    }
+
+    fun selectBackground (character: CharacterModel) {
+        var bgUpdated = false
+        do {
+            val input: Int = characterView.listBackgrounds()
+            when(input){
+                1 -> {character.background = "Acolyte"; bgUpdated = true}
+                2 -> {character.background = "Charlatan"; bgUpdated = true}
+                3 -> {character.background = "Criminal"; bgUpdated = true}
+                4 -> {character.background = "Entertainer"; bgUpdated = true}
+                5 -> {character.background = "Folk Hero"; bgUpdated = true}
+                6 -> {character.background = "Guild Artisan"; bgUpdated = true}
+                7 -> {character.background = "Hermit"; bgUpdated = true}
+                8 -> {character.background = "Noble"; bgUpdated = true}
+                9 -> {character.background = "Outlander"; bgUpdated = true}
+                10 -> {character.background = "Sage"; bgUpdated = true}
+                11 -> {character.background = "Sailor"; bgUpdated = true}
+                12 -> {character.background = "Solider"; bgUpdated = true}
+                13 -> {character.background = "Urchin"; bgUpdated = true}
+                -1 -> t.println(rgb("#ff9393")("Returning..."))
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+        } while (input != -1 && !bgUpdated)
+    }
+
+    fun createCharacter( character: CharacterModel){
+        characters.create(character)
+        logger.info("Character Added : [ $character ]")
+    }
 
 
     fun list() {
@@ -134,12 +262,8 @@ class CharacterController {
     }
 
     fun updateLevel (character: CharacterModel) {
-        if(characterView.updateCharacterLevel(character)) {
-            character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //level change => HP increase/decrease => recalculate HP
-            characters.update(character)
-            characterView.showCharacter(character)
-            logger.info("Character Updated : [ $character ]")
-        }
+        characterView.updateCharacterLevel(character)
+        character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //level change => HP increase/decrease => recalculate HP
     }
 
     fun updateName (character: CharacterModel) {
@@ -207,29 +331,29 @@ class CharacterController {
     }
 
     fun updateScores (character: CharacterModel) {
-        var scoreUpdated = false
-        var conUpdated = false
-        do {
-            val input: Int = characterView.listAbilityScores()
-            when(input){
-                1 -> scoreUpdated = characterView.updateCharacterScores(character, "str")
-                2 -> scoreUpdated = characterView.updateCharacterScores(character, "dex")
-                3 -> {scoreUpdated = characterView.updateCharacterScores(character, "con"); conUpdated = true}
-                4 -> scoreUpdated = characterView.updateCharacterScores(character, "int")
-                5 -> scoreUpdated = characterView.updateCharacterScores(character, "wis")
-                6 -> scoreUpdated = characterView.updateCharacterScores(character, "cha")
-                else -> println("Invalid Option")
-            }
-        } while (input != -1 && !scoreUpdated)
-
-        if (scoreUpdated){
-            if (conUpdated) {
-                character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //con update => modifier changed => recalculate HP
-            }
-            characters.update(character)
-            characterView.showCharacter(character)
-            logger.info("Character Updated : [ $character ]")
-        }
+//        var scoreUpdated = false
+//        var conUpdated = false
+//        do {
+//            val input: Int = characterView.listAbilityScores()
+//            when(input){
+//                1 -> scoreUpdated = characterView.updateCharacterScores(character, "str")
+//                2 -> scoreUpdated = characterView.updateCharacterScores(character, "dex")
+//                3 -> {scoreUpdated = characterView.updateCharacterScores(character, "con"); conUpdated = true}
+//                4 -> scoreUpdated = characterView.updateCharacterScores(character, "int")
+//                5 -> scoreUpdated = characterView.updateCharacterScores(character, "wis")
+//                6 -> scoreUpdated = characterView.updateCharacterScores(character, "cha")
+//                else -> println("Invalid Option")
+//            }
+//        } while (input != -1 && !scoreUpdated)
+//
+//        if (scoreUpdated){
+//            if (conUpdated) {
+//                character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //con update => modifier changed => recalculate HP
+//            }
+//            characters.update(character)
+//            characterView.showCharacter(character)
+//            logger.info("Character Updated : [ $character ]")
+//        }
     }
 
     fun updateBackground (character: CharacterModel) {

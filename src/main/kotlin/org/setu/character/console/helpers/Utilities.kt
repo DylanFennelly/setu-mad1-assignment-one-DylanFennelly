@@ -20,6 +20,7 @@ fun calculateHP(charLevel : Byte, charClass : String, conScore : Byte): Short{
         "Sorcerer"  -> maxHP += (6 + calculateMod(conScore))
         "Warlock"  -> maxHP += (8 + calculateMod(conScore))
         "Wizard"  -> maxHP += (6 + calculateMod(conScore))
+        else -> maxHP = 0   //for if during character creation con score is changed before class is selected
     }
 
     //HP above level 1: (Class HP + con mod) x levels above 1
@@ -38,6 +39,7 @@ fun calculateHP(charLevel : Byte, charClass : String, conScore : Byte): Short{
             "Sorcerer"  -> hpPerLevel += (4 + calculateMod(conScore))
             "Warlock"  -> hpPerLevel += (5 + calculateMod(conScore))
             "Wizard"  -> hpPerLevel += (4 + calculateMod(conScore))
+            else -> hpPerLevel = 1
         }
 
         if (hpPerLevel < 1){    //if character would gain no HP/lose hp on level up, guarantee 1 HP gain

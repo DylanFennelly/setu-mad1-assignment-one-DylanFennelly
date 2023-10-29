@@ -1,5 +1,6 @@
 package org.setu.character.console.views
 
+import com.github.ajalt.mordant.rendering.TextAlign
 import org.setu.character.console.helpers.validateByteToNum
 import org.setu.character.console.helpers.validateShortToNum
 import org.setu.character.console.models.CharacterModel
@@ -8,6 +9,7 @@ import org.setu.character.console.models.CharacterStore
 import com.github.ajalt.mordant.rendering.TextColors.*
 import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 import com.github.ajalt.mordant.rendering.TextStyles.*
+import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal
 
 class CharacterView {
@@ -15,6 +17,9 @@ class CharacterView {
     val t = Terminal()
     val titleStyle = (bold + underline)     //style for menu titles
 
+    init {
+        t.info.width = 120      //setting max terminal width to be wider to allow for tables to print fully
+    }
     fun menu() : Int {
 
         var option : Int
@@ -43,14 +48,15 @@ class CharacterView {
         var option : Int
         var input: String?
 
-        t.println(titleStyle("Select attribute to enter"))
+        t.println(titleStyle("Select attribute"))
         t.println(" ${green("1.")} Name")
         t.println(" ${green("2.")} Race")
         t.println(" ${green("3.")} Class")
-        t.println(" ${green("4.")} Ability Scores")
-        t.println(" ${green("5.")} Background")
+        t.println(" ${green("4.")} Level")
+        t.println(" ${green("5.")} Ability Scores")
+        t.println(" ${green("6.")} Background")
         t.println()
-        t.println(" ${green("6.")} Create character")
+        t.println(" ${green("7.")} Create character")
         t.println(" ${green("-1.")} Cancel character creation")
         t.println()
         input = t.prompt(brightBlue("Enter Option"))!!
@@ -65,20 +71,14 @@ class CharacterView {
         var option : Int
         var input: String?
 
-        println("Choose a Race")
-        println("===============")
-        println(" 1. Dragonborn")
-        println(" 2. Dwarf")
-        println(" 3. Elf")
-        println(" 4. Gnome")
-        println(" 5. Half-Elf")
-        println(" 6. Half-Orc")
-        println(" 7. Halfling")
-        println(" 8. Human")
-        println(" 9. Tiefling")
-        println()
-        print("Enter Option : ")
-        input = readln()!!
+        t.println(titleStyle("Choose a Race"))
+        t.println(" ${green("1.")} Dragonborn       ${green("6.")} Half-Orc")
+        t.println(" ${green("2.")} Dwarf            ${green("7.")} Halfling")
+        t.println(" ${green("3.")} Elf              ${green("8.")} Human")
+        t.println(" ${green("4.")} Gnome            ${green("9.")} Tiefling")
+        t.println(" ${green("5.")} Half-Elf")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
         option = if (input.toIntOrNull() != null && !input.isEmpty())
             input.toInt()
         else
@@ -90,23 +90,15 @@ class CharacterView {
         var option : Int
         var input: String?
 
-        println("Choose a Class")
-        println("===============")
-        println(" 1. Barbarian")
-        println(" 2. Bard")
-        println(" 3. Cleric")
-        println(" 4. Druid")
-        println(" 5. Fighter")
-        println(" 6. Monk")
-        println(" 7. Paladin")
-        println(" 8. Ranger")
-        println(" 9. Rouge")
-        println(" 10. Sorcerer")
-        println(" 11. Warlock")
-        println(" 12. Wizard")
-        println()
-        print("Enter Option : ")
-        input = readln()!!
+        t.println(titleStyle("Choose a Class"))
+        t.println(" ${green("1.")} Barbarian        ${green("7.")} Paladin")
+        t.println(" ${green("2.")} Bard             ${green("8.")} Ranger")
+        t.println(" ${green("3.")} Cleric           ${green("9.")} Rouge")
+        t.println(" ${green("4.")} Druid            ${green("10.")} Sorcerer")
+        t.println(" ${green("5.")} Fighter          ${green("11.")} Warlock")
+        t.println(" ${green("6.")} Monk             ${green("12.")} Wizard")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
         option = if (input.toIntOrNull() != null && !input.isEmpty())
             input.toInt()
         else
@@ -118,24 +110,16 @@ class CharacterView {
         var option : Int
         var input: String?
 
-        println("Choose a Background")
-        println("===============")
-        println(" 1. Acolyte")
-        println(" 2. Charlatan")
-        println(" 3. Criminal")
-        println(" 4. Entertainer")
-        println(" 5. Folk Hero")
-        println(" 6. Guild Artisan")
-        println(" 7. Hermit")
-        println(" 8. Noble")
-        println(" 9. Outlander")
-        println(" 10. Sage")
-        println(" 11. Sailor")
-        println(" 12. Soldier")
-        println(" 13. Urchin")
-        println()
-        print("Enter Option : ")
-        input = readln()!!
+        t.println(titleStyle("Choose a Background"))
+        t.println(" ${green("1.")} Acolyte          ${green("8.")} Noble")
+        t.println(" ${green("2.")} Charlatan        ${green("9.")} Outlander")
+        t.println(" ${green("3.")} Criminal         ${green("10.")} Sage")
+        t.println(" ${green("4.")} Entertainer      ${green("11.")} Sailor")
+        t.println(" ${green("5.")} Folk Hero        ${green("12.")} Soldier")
+        t.println(" ${green("6.")} Guild Artisan    ${green("13.")} Urchin")
+        t.println(" ${green("7.")} Hermit")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
         option = if (input.toIntOrNull() != null && !input.isEmpty())
             input.toInt()
         else
@@ -173,19 +157,14 @@ class CharacterView {
         var option : Int
         var input: String?
 
-        println("Select ability score")
-        println("===============")
-        println(" 1. Strength (STR)")
-        println(" 2. Dexterity (DEX)")
-        println(" 3. Constitution (CON)")
-        println(" 4. Intelligence (INT)")
-        println(" 5. Wisdom (WIS)")
-        println(" 6. Charisma (CHA)")
-        println()
-        println(" -1. Return to update menu")
-        println()
-        print("Enter Option : ")
-        input = readln()!!
+        t.println(titleStyle("Select ability score"))
+        t.println(" ${green("1.")} Strength (STR)       ${green("4.")} Intelligence (INT)")
+        t.println(" ${green("2.")} Dexterity (DEX)      ${green("5.")} Wisdom (WIS)")
+        t.println(" ${green("3.")} Constitution (CON)   ${green("6.")} Charisma (CHA)")
+        t.println()
+        t.println(" ${green("-1.")} Return to previous menu")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
         option = if (input.toIntOrNull() != null && !input.isEmpty())
             input.toInt()
         else
@@ -202,183 +181,39 @@ class CharacterView {
 
     fun showCharacter(character : CharacterModel?) {
         if(character != null)
-            println("Character Details [ $character ]")
+            t.println(table{            //creates table to display character attributes
+                align = TextAlign.CENTER
+                header {
+                    style(bold = true)
+                    row("Name", "Race", "Class", "Level", "STR", "DEX", "CON", "INT", "WIS", "CHA", "Background", "Max HP", "AC")  }
+                body {
+                    style(green)
+                    row(character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac) }
+            })
         else
-            println("Character Not Found...")
-    }
-
-    //TODO: refactor to better adhere to MVC model
-    fun addCharacterData(character : CharacterModel) : Boolean {
-
-        println()
-        var nameValidated = false
-        do{
-            print("Enter Character Name: ")
-            character.name = readln()!!
-            if (character.name.isNotEmpty()){
-                nameValidated = true
-            }else{
-                println("Character name must not be empty")
-            }
-        } while (!nameValidated)
-
-        do {
-            val input: Int = listRaces()
-            when(input) {
-                1 -> character.race = "Dragonborn"
-                2 -> character.race = "Dwarf"
-                3 -> character.race = "Elf"
-                4 -> character.race = "Gnome"
-                5 -> character.race = "Half-Elf"
-                6 -> character.race = "Half-Orc"
-                7 -> character.race = "Halfling"
-                8 -> character.race = "Human"
-                9 -> character.race = "Tiefling"
-                else -> println("Invalid Option")
-            }
-            println()
-        } while (character.race.isEmpty())
-
-        do {
-            val input: Int = listClasses()
-            when(input) {
-                1 -> character.battleClass = "Barbarian"
-                2 -> character.battleClass = "Bard"
-                3 -> character.battleClass = "Cleric"
-                4 -> character.battleClass = "Druid"
-                5 -> character.battleClass = "Fighter"
-                6 -> character.battleClass = "Monk"
-                7 -> character.battleClass = "Paladin"
-                8 -> character.battleClass = "Ranger"
-                9 -> character.battleClass = "Rouge"
-                10 -> character.battleClass = "Sorcerer"
-                11 -> character.battleClass = "Warlock"
-                12 -> character.battleClass = "Wizard"
-                else -> println("Invalid Option")
-            }
-            println()
-        } while (character.battleClass.isEmpty())
-
-        var scoreValidated = false
-        var tempScore: String
-        do{
-            print("Enter Strength Score: ")
-            tempScore = readln()!!
-            if (validateByteToNum(tempScore, 1, 30)){
-                scoreValidated = true
-                character.str = tempScore.toByte()
-            }else{
-                println("Invalid input: Ability score must be a valid number between 1 and 30.")
-            }
-        } while (!scoreValidated)
-
-        scoreValidated = false      //reset boolean
-        do{
-            print("Enter Dexterity Score: ")
-            tempScore = readln()!!
-            if (validateByteToNum(tempScore, 1, 30)){
-                scoreValidated = true
-                character.dex = tempScore.toByte()
-            }else{
-                println("Invalid input: Ability score must be a valid number between 1 and 30.")
-            }
-        } while (!scoreValidated)
-
-        scoreValidated = false
-        do{
-            print("Enter Constitution Score: ")
-            tempScore = readln()!!
-            if (validateByteToNum(tempScore, 1, 30)){
-                scoreValidated = true
-                character.con = tempScore.toByte()
-            }else{
-                println("Invalid input: Ability score must be a valid number between 1 and 30.")
-            }
-        } while (!scoreValidated)
-
-        scoreValidated = false
-        do{
-            print("Enter Intelligence Score: ")
-            tempScore = readln()!!
-            if (validateByteToNum(tempScore, 1, 30)){
-                scoreValidated = true
-                character.int = tempScore.toByte()
-            }else{
-                println("Invalid input: Ability score must be a valid number between 1 and 30.")
-            }
-        } while (!scoreValidated)
-
-        scoreValidated = false
-        do{
-            print("Enter Wisdom Score: ")
-            tempScore = readln()!!
-            if (validateByteToNum(tempScore, 1, 30)){
-                scoreValidated = true
-                character.wis = tempScore.toByte()
-            }else{
-                println("Invalid input: Ability score must be a valid number between 1 and 30.")
-            }
-        } while (!scoreValidated)
-
-        scoreValidated = false      //reset boolean
-        do{
-            print("Enter Charisma Score: ")
-            tempScore = readln()!!
-            if (validateByteToNum(tempScore, 1, 30)){
-                scoreValidated = true
-                character.cha = tempScore.toByte()
-            }else{
-                println("Invalid input: Ability score must be a valid number between 1 and 30.")
-            }
-        } while (!scoreValidated)
-
-        do {
-            val input: Int = listBackgrounds()
-            when(input) {
-                1 -> character.background = "Acolyte"
-                2 -> character.background = "Charlatan"
-                3 -> character.background = "Criminal"
-                4 -> character.background = "Entertainer"
-                5 -> character.background = "Folk Hero"
-                6 -> character.background = "Guild Artisan"
-                7 -> character.background = "Hermit"
-                8 -> character.background = "Noble"
-                9 -> character.background = "Outlander"
-                10 -> character.background = "Sage"
-                11 -> character.background = "Sailor"
-                12 -> character.background = "Solider"
-                13 -> character.background = "Urchin"
-                else -> println("Invalid Option")
-            }
-            println()
-        } while (character.background.isEmpty())
-
-
-        return true //TODO: change return type (all inputs should be validated by the time method gets here)
+            t.println(red("Error: Character Not Found..."))
     }
 
     //level up/down character
-    fun updateCharacterLevel(character: CharacterModel) : Boolean {
+    fun updateCharacterLevel(character: CharacterModel) {
         var tempLevel : String?
         var levelValidated = false
-        println("--- Update character level (enter '-1' to return) ---")
         do{
-            print("Enter new character level: ")
-            tempLevel = readln()!!
+            tempLevel = t.prompt(brightBlue("Enter character level"))!!
             if (validateByteToNum(tempLevel, 1, 20)){    //character level cannot be less than 1 or greater than 20{
                 levelValidated = true
                 character.level = tempLevel.toByte()
             }else if (tempLevel == "-1"){
-                return false
+                t.println(rgb("#ff9393")("Returning..."))
+                break
             }else{
-                println("Invalid input: Character level must be a valid number between 1 and 20.")
+                t.println(red("Invalid input: Character level must be a valid number between 1 and 20."))
             }
         } while (!levelValidated)
 
-        return true
     }
 
-    fun enterCharacterName(character: CharacterModel): Boolean {
+    fun enterCharacterName(character: CharacterModel) {
         var tempName : String?
         var nameValidated = false
         do{
@@ -387,13 +222,12 @@ class CharacterView {
                 nameValidated = true
                 character.name = tempName
             }else if (tempName == "-1"){
-                return false
+                t.println(rgb("#ff9393")("Returning..."))
+                break
             }else{
                 t.println(red("Error: Character name must not be empty."))
             }
         } while (!nameValidated)
-
-        return true
     }
 
     fun updateCharacterName(character: CharacterModel) : Boolean {
@@ -417,13 +251,11 @@ class CharacterView {
     }
 
 
-    fun updateCharacterScores(character: CharacterModel, score: String) : Boolean {
+    fun updateCharacterScores(character: CharacterModel, score: String) {
         var tempScore : String?
         var scoreValidated = false
-        println("--- Update ability score (enter '-1' to return) ---")
         do{
-            print("Enter new score value: ")
-            tempScore = readln()!!
+            tempScore = t.prompt(brightBlue("Enter score value"))!!
 
             if (validateByteToNum(tempScore, 1, 30)){ //Ability score cannot be below 1 or above 30
                 scoreValidated = true
@@ -436,13 +268,12 @@ class CharacterView {
                     "cha" -> character.cha = tempScore.toByte()
                 }
             }else if (tempScore == "-1"){
-                return false
+                t.println(rgb("#ff9393")("Returning..."))
+               break
             }else{
-                println("Invalid input: Ability score must be a valid number between 1 and 30.")
+                t.println(red("Invalid input: Ability score must be a valid number between 1 and 30."))
             }
         } while (!scoreValidated)
-
-        return true
     }
 
     fun updateCharacterAC(character: CharacterModel) : Boolean {

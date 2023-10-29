@@ -18,7 +18,7 @@ class CharacterView {
     val titleStyle = (bold + underline)     //style for menu titles
 
     init {
-        t.info.width = 120      //setting max terminal width to be wider to allow for tables to print fully
+        t.info.width = 150      //setting max terminal width to be wider to allow for tables to print fully
     }
     fun menu() : Int {
 
@@ -168,9 +168,21 @@ class CharacterView {
 
     fun listCharacters(characters : CharacterStore) {
         println("List All Characters")
-        println()
-        characters.logAll()
-        println()
+        t.println(table{            //creates table to display character attributes
+            align = TextAlign.CENTER
+            column(0){
+                style = green
+            }
+            header {
+                style(green, bold = true)
+                row("ID","Name", "Race", "Class", "Level", "STR", "DEX", "CON", "INT", "WIS", "CHA", "Background", "Max HP", "AC")  }
+            body {
+                characters.findAll().forEachIndexed { index, character ->
+                    row(index, character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac)
+                }
+
+            }
+        })
     }
 
     fun showCharacter(character : CharacterModel?) {

@@ -24,7 +24,7 @@ class CharacterController {
 
     init {
         logger.info { "Launching D&D Character Creator Console App" }
-        t.info.width = 120      //setting max terminal width to be wider to allow for tables to print fully - https://github.com/ajalt/mordant/issues/13
+        t.info.width = 150      //setting max terminal width to be wider to allow for tables to print fully - https://github.com/ajalt/mordant/issues/13
         t.println(menuHeadingStyle("""
                      -+*#*+=                      
 -+===--------:      ###-.:*## :+===--------:.     

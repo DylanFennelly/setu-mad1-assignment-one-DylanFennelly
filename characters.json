@@ -48,22 +48,6 @@
     "background": "Sage"
   },
   {
-    "id": -1138042522549179958,
-    "name": "-1",
-    "race": "Tiefling",
-    "battleClass": "Wizard",
-    "level": 1,
-    "str": 6,
-    "dex": 10,
-    "con": 12,
-    "int": 18,
-    "wis": 16,
-    "cha": 12,
-    "maxHP": 7,
-    "ac": 10,
-    "background": "Hermit"
-  },
-  {
     "id": -3748322962876851972,
     "name": "Dash",
     "race": "Human",

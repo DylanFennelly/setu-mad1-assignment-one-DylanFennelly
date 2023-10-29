@@ -20,7 +20,7 @@ fun generateRandomId(): Long {
     return Random().nextLong()
 }
 
-class CharacterJSONStore : CharacterStore {
+class CharacterJSONStore : CharacterStore, ItemStore {
 
     var characters = mutableListOf<CharacterModel>()
 
@@ -112,6 +112,26 @@ class CharacterJSONStore : CharacterStore {
     fun deleteAll(){        //deletes all data - USE CAREFULLY
         characters = mutableListOf()
         serialize()
+    }
+
+    override fun listAllItems(character: CharacterModel): List<ItemModel> {
+        TODO("Not yet implemented")
+    }
+
+    override fun findOneItem(id: Long): ItemModel? {
+        TODO("Not yet implemented")
+    }
+
+    override fun addItemToCharacter(character: CharacterModel, itemModel: ItemModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun updateItem(character: CharacterModel, itemModel: ItemModel) {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteItem(character: CharacterModel, itemModel: ItemModel) {
+        TODO("Not yet implemented")
     }
 
 

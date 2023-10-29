@@ -1,19 +1,19 @@
 [
   {
     "id": 5377281911035930374,
-    "name": "Zaan",
-    "race": "Half-Orc",
-    "battleClass": "Cleric",
-    "level": 1,
-    "str": 30,
-    "dex": 30,
-    "con": 18,
+    "name": "Rylanor",
+    "race": "Human",
+    "battleClass": "Barbarian",
+    "level": 3,
+    "str": 18,
+    "dex": 14,
+    "con": 16,
     "int": 7,
     "wis": 10,
     "cha": 8,
-    "maxHP": 12,
-    "ac": 17,
-    "background": "Acolyte"
+    "maxHP": 35,
+    "ac": 12,
+    "background": "Outlander"
   },
   {
     "id": 9218356089001388513,

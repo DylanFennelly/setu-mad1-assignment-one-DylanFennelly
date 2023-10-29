@@ -120,7 +120,7 @@ class CharacterController {
         } while (!exitMenu)
     }
 
-    fun selectRace (character: CharacterModel) {
+    fun selectRace (character: CharacterModel) : Boolean {
         var raceChosen = false
         do {
             val input: Int = characterView.listRaces()
@@ -139,9 +139,10 @@ class CharacterController {
             }
             t.println()
         } while (input != -1 && !raceChosen)    //loops menu until valid selection is made (race updated) or -1 is entered
+        return raceChosen
     }
 
-    fun selectClass (character: CharacterModel) {
+    fun selectClass (character: CharacterModel): Boolean {
         var classChosen = false
         do {
             val input: Int = characterView.listClasses()
@@ -166,9 +167,12 @@ class CharacterController {
         if (classChosen){
             character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //class update => base HP updated => recalculate HP
         }
+
+        return classChosen
     }
 
-    fun enterScores (character: CharacterModel) {
+    fun enterScores (character: CharacterModel): Boolean {
+        var scoreUpdated = false
         var conUpdated = false
         do {
             t.println()
@@ -185,12 +189,12 @@ class CharacterController {
 
             val input: Int = characterView.listAbilityScores()
             when(input){
-                1 -> characterView.updateCharacterScores(character, "str")
-                2 -> characterView.updateCharacterScores(character, "dex")
-                3 -> {characterView.updateCharacterScores(character, "con"); conUpdated = true}
-                4 -> characterView.updateCharacterScores(character, "int")
-                5 -> characterView.updateCharacterScores(character, "wis")
-                6 -> characterView.updateCharacterScores(character, "cha")
+                1 -> {characterView.updateCharacterScores(character, "str"); scoreUpdated = true}
+                2 -> {characterView.updateCharacterScores(character, "dex"); scoreUpdated = true}
+                3 -> {characterView.updateCharacterScores(character, "con"); scoreUpdated = true ; conUpdated = true}
+                4 -> {characterView.updateCharacterScores(character, "int"); scoreUpdated = true}
+                5 -> {characterView.updateCharacterScores(character, "wis"); scoreUpdated = true}
+                6 -> {characterView.updateCharacterScores(character, "cha"); scoreUpdated = true}
                 -1 -> {}        //empty function to prevent error message printing upon -1 entry
                 else -> t.println(red("Error: Invalid option entered."))
             }
@@ -198,9 +202,11 @@ class CharacterController {
                 character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //con update => modifier changed => recalculate HP
             }
         } while (input != -1 )
+
+        return scoreUpdated
     }
 
-    fun selectBackground (character: CharacterModel) {
+    fun selectBackground (character: CharacterModel): Boolean {
         var bgUpdated = false
         do {
             val input: Int = characterView.listBackgrounds()
@@ -222,6 +228,7 @@ class CharacterController {
                 else -> t.println(red("Error: Invalid option entered."))
             }
         } while (input != -1 && !bgUpdated)
+        return bgUpdated
     }
 
     fun createCharacter( character: CharacterModel){
@@ -229,6 +236,11 @@ class CharacterController {
         logger.info("Character Added : [ $character ]")
     }
 
+    fun updateCharacter( character: CharacterModel){
+        characters.update(character)
+        logger.info("Character Updated : [ $character ]")
+        Thread.sleep(100)       //wait to prevent logger from printing in the middle of table prints
+    }
 
     fun list() {
         characterView.listCharacters(characters)
@@ -242,164 +254,87 @@ class CharacterController {
 
         if(aCharacter != null) {
             do {
+                t.println()
+                t.println(green("============   Current character attributes   ============"))
+                characterView.showCharacter(aCharacter)
                 val input: Int = characterView.listUpdateOptions()
                 when(input) {
-                    1 -> updateLevel(aCharacter)
-                    2 -> updateName(aCharacter)
-                    3 -> updateRace(aCharacter)
-                    4 -> updateClass(aCharacter)
-                    5 -> updateScores(aCharacter)
-                    6 -> updateBackground(aCharacter)
-                    7 -> updateAC(aCharacter)
-                    8 -> updateHP(aCharacter)
-                    else -> println("Invalid Option")
+                    1 -> {
+                        if(updateLevel(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Level updated!"))
+                        }
+                    }
+                    2 -> {
+                        if(characterView.enterCharacterName(aCharacter)) {
+                            updateCharacter(aCharacter)
+                            t.println(green("Name updated!"))
+                        }
+                    }
+                    3 -> {
+                        if(selectRace(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Race updated!"))
+                        }
+                    }
+                    4 -> {
+                        if(selectClass(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Class updated!"))
+                        }
+                    }
+                    5 -> {
+                        if(enterScores(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Ability scores updated!"))
+                        }
+                    }
+                    6 -> {
+                        if(selectBackground(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Background updated!"))
+                        }
+                    }
+                    7 -> {
+                        if(updateAC(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Armour class updated!"))
+                        }
+                    }
+                    8 -> {
+                        if(updateHP(aCharacter)){
+                            updateCharacter(aCharacter)
+                            t.println(green("Max HP updated!"))
+                        }
+                    }
+                    -1 -> {}        //empty function to prevent error message printing upon -1 entry
+                    else -> t.println(red("Error: Invalid option entered."))
                 }
-                println()
             } while (input != -1)
         }
         else
-            println("No Character with ID $searchId found")
+            t.println(red("Error: No Character with ID $searchId found"))
     }
 
-    fun updateLevel (character: CharacterModel) {
-        characterView.updateCharacterLevel(character)
-        character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //level change => HP increase/decrease => recalculate HP
-    }
-
-    fun updateName (character: CharacterModel) {
-        if(characterView.updateCharacterName(character)) {
-            characters.update(character)
-            characterView.showCharacter(character)
-            logger.info("Character Updated : [ $character ]")
+    fun updateLevel (character: CharacterModel): Boolean {
+        if (characterView.updateCharacterLevel(character)){
+            character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //level change => HP increase/decrease => recalculate HP
+            return true
         }
+        return false
     }
-
-    fun updateRace (character: CharacterModel) {
-        println("--- Update character race (enter '-1' to return) ---")
-        var raceUpdated = false
-        do {
-            val input: Int = characterView.listRaces()
-            when(input){
-                1 -> {character.race = "Dragonborn"; raceUpdated = true}
-                2 -> {character.race = "Dwarf"; raceUpdated = true}
-                3 -> {character.race = "Elf"; raceUpdated = true}
-                4 -> {character.race = "Gnome"; raceUpdated = true}
-                5 -> {character.race = "Half-Elf"; raceUpdated = true}
-                6 -> {character.race = "Half-Orc"; raceUpdated = true}
-                7 -> {character.race = "Halfling"; raceUpdated = true}
-                8 -> {character.race = "Human"; raceUpdated = true}
-                9 -> {character.race = "Tiefling"; raceUpdated = true}
-                else -> println("Invalid Option")
-            }
-        } while (input != -1 && !raceUpdated)    //loops menu until valid selection is made (race updated) or -1 is entered
-
-        if (raceUpdated){
-            characters.update(character)
-            characterView.showCharacter(character)
-            logger.info("Character Updated : [ $character ]")
-        }
-    }
-
-    fun updateClass (character: CharacterModel) {
-        println("--- Update character class (enter '-1' to return) ---")
-        var classUpdated = false
-        do {
-            val input: Int = characterView.listClasses()
-            when(input){
-                1 -> {character.battleClass = "Barbarian"; classUpdated = true}
-                2 -> {character.battleClass = "Bard"; classUpdated = true}
-                3 -> {character.battleClass = "Cleric"; classUpdated = true}
-                4 -> {character.battleClass = "Druid"; classUpdated = true}
-                5 -> {character.battleClass = "Fighter"; classUpdated = true}
-                6 -> {character.battleClass = "Monk"; classUpdated = true}
-                7 -> {character.battleClass = "Paladin"; classUpdated = true}
-                8 -> {character.battleClass = "Ranger"; classUpdated = true}
-                9 -> {character.battleClass = "Rouge"; classUpdated = true}
-                10 -> {character.battleClass = "Sorcerer"; classUpdated = true}
-                11 -> {character.battleClass = "Warlock"; classUpdated = true}
-                12 -> {character.battleClass = "Wizard"; classUpdated = true}
-                else -> println("Invalid Option")
-            }
-        } while (input != -1 && !classUpdated)
-
-        if (classUpdated){
-            character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //class update => base HP updated => recalculate HP
-            characters.update(character)
-            characterView.showCharacter(character)
-            logger.info("Character Updated : [ $character ]")
-        }
-    }
-
-    fun updateScores (character: CharacterModel) {
-//        var scoreUpdated = false
-//        var conUpdated = false
-//        do {
-//            val input: Int = characterView.listAbilityScores()
-//            when(input){
-//                1 -> scoreUpdated = characterView.updateCharacterScores(character, "str")
-//                2 -> scoreUpdated = characterView.updateCharacterScores(character, "dex")
-//                3 -> {scoreUpdated = characterView.updateCharacterScores(character, "con"); conUpdated = true}
-//                4 -> scoreUpdated = characterView.updateCharacterScores(character, "int")
-//                5 -> scoreUpdated = characterView.updateCharacterScores(character, "wis")
-//                6 -> scoreUpdated = characterView.updateCharacterScores(character, "cha")
-//                else -> println("Invalid Option")
-//            }
-//        } while (input != -1 && !scoreUpdated)
-//
-//        if (scoreUpdated){
-//            if (conUpdated) {
-//                character.maxHP = calculateHP(character.level, character.battleClass, character.con)    //con update => modifier changed => recalculate HP
-//            }
-//            characters.update(character)
-//            characterView.showCharacter(character)
-//            logger.info("Character Updated : [ $character ]")
-//        }
-    }
-
-    fun updateBackground (character: CharacterModel) {
-        println("--- Update character background (enter '-1' to return) ---")
-        var bgUpdated = false
-        do {
-            val input: Int = characterView.listBackgrounds()
-            when(input){
-                1 -> {character.background = "Acolyte"; bgUpdated = true}
-                2 -> {character.background = "Charlatan"; bgUpdated = true}
-                3 -> {character.background = "Criminal"; bgUpdated = true}
-                4 -> {character.background = "Entertainer"; bgUpdated = true}
-                5 -> {character.background = "Folk Hero"; bgUpdated = true}
-                6 -> {character.background = "Guild Artisan"; bgUpdated = true}
-                7 -> {character.background = "Hermit"; bgUpdated = true}
-                8 -> {character.background = "Noble"; bgUpdated = true}
-                9 -> {character.background = "Outlander"; bgUpdated = true}
-                10 -> {character.background = "Sage"; bgUpdated = true}
-                11 -> {character.background = "Sailor"; bgUpdated = true}
-                12 -> {character.background = "Solider"; bgUpdated = true}
-                13 -> {character.background = "Urchin"; bgUpdated = true}
-                else -> println("Invalid Option")
-            }
-        } while (input != -1 && !bgUpdated)
-
-        if (bgUpdated){
-            characters.update(character)
-            characterView.showCharacter(character)
-            logger.info("Character Updated : [ $character ]")
-        }
-    }
-
-    fun updateAC (character: CharacterModel) {
+    fun updateAC (character: CharacterModel): Boolean {
         if(characterView.updateCharacterAC(character)) {
-            characters.update(character)
-            characterView.showCharacter(character)
-            logger.info("Character Updated : [ $character ]")
+            return true
         }
+        return false
     }
 
-    fun updateHP (character: CharacterModel) {
+    fun updateHP (character: CharacterModel): Boolean {
         if(characterView.updateCharacterHP(character)) {
-            characters.update(character)
-            characterView.showCharacter(character)
-            logger.info("Character Updated : [ $character ]")
+            return true
         }
+        return false
     }
 
     fun delete(){

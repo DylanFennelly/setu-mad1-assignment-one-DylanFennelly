@@ -33,7 +33,7 @@ class CharacterView {
         t.println(" ${green("4.")} Search Characters")
         t.println(" ${green("5.")} Delete Character")
         t.println()
-        t.println("${green("-1.")} Exit Application")
+        t.println("${green(" -1.")} Exit Application")
         t.println()
         input = t.prompt(brightBlue("Enter Option"))!!
 
@@ -131,21 +131,15 @@ class CharacterView {
         var option : Int
         var input: String?
 
-        println("Select attribute to update")
-        println("===============")
-        println(" 1. Level")
-        println(" 2. Name")
-        println(" 3. Race")
-        println(" 4. Class")
-        println(" 5. Ability Scores")
-        println(" 6. Background")
-        println(" 7. Armour Class")
-        println(" 8. Max HP Override")
-        println()
-        println(" -1. Return to main menu")
-        println()
-        print("Enter Option : ")
-        input = readln()!!
+        t.println(titleStyle("Select attribute to update"))
+        t.println(" ${green("1.")} Level        ${green("5.")} Ability Scores")
+        t.println(" ${green("2.")} Name         ${green("6.")} Background")
+        t.println(" ${green("3.")} Race         ${green("7.")} Armour Class")
+        t.println(" ${green("4.")} Class        ${green("8.")} Max HP Override")
+        t.println()
+        t.println(" ${green("-1.")} Return to main menu")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
         option = if (input.toIntOrNull() != null && !input.isEmpty())
             input.toInt()
         else
@@ -195,7 +189,7 @@ class CharacterView {
     }
 
     //level up/down character
-    fun updateCharacterLevel(character: CharacterModel) {
+    fun updateCharacterLevel(character: CharacterModel):Boolean {
         var tempLevel : String?
         var levelValidated = false
         do{
@@ -205,15 +199,15 @@ class CharacterView {
                 character.level = tempLevel.toByte()
             }else if (tempLevel == "-1"){
                 t.println(rgb("#ff9393")("Returning..."))
-                break
+                return false
             }else{
                 t.println(red("Invalid input: Character level must be a valid number between 1 and 20."))
             }
         } while (!levelValidated)
-
+        return true
     }
 
-    fun enterCharacterName(character: CharacterModel) {
+    fun enterCharacterName(character: CharacterModel): Boolean {
         var tempName : String?
         var nameValidated = false
         do{
@@ -223,32 +217,14 @@ class CharacterView {
                 character.name = tempName
             }else if (tempName == "-1"){
                 t.println(rgb("#ff9393")("Returning..."))
-                break
+                return false
             }else{
                 t.println(red("Error: Character name must not be empty."))
             }
         } while (!nameValidated)
-    }
-
-    fun updateCharacterName(character: CharacterModel) : Boolean {
-        var tempName : String?
-        var nameValidated = false
-        println("--- Update character name (enter '-1' to return) ---")
-        do{
-            print("Enter New Character Name: ")
-            tempName = readln()!!
-            if (tempName.isNotEmpty() && tempName != "-1") {
-                nameValidated = true
-                character.name = tempName
-            }else if (tempName == "-1"){
-                return false
-            }else{
-                println("Character name must not be empty.")
-            }
-        } while (!nameValidated)
-
         return true
     }
+
 
 
     fun updateCharacterScores(character: CharacterModel, score: String) {
@@ -279,18 +255,17 @@ class CharacterView {
     fun updateCharacterAC(character: CharacterModel) : Boolean {
         var tempAC : String?
         var acValidated = false
-        println("--- Update character armour class (enter '-1' to return) ---")
         do{
-            print("Enter Armour Class value: ")
-            tempAC = readln()!!
+            tempAC = t.prompt(brightBlue("Enter armour class value"))!!
 
             if (validateByteToNum(tempAC, 1, 127)){ //Armour class cannot be below 1
                 acValidated = true
                 character.ac = tempAC.toByte()
             }else if (tempAC == "-1"){
+                t.println(rgb("#ff9393")("Returning..."))
                 return false
             }else{
-                println("Invalid input: Armour class must be a valid number between 1 and 127.")
+                t.println(red("Invalid input: Armour class must be a valid number between 1 and 127."))
             }
         } while (!acValidated)
 
@@ -300,19 +275,18 @@ class CharacterView {
     fun updateCharacterHP(character: CharacterModel) : Boolean {
         var tempHP : String?
         var hpValidated = false
-        println("--- Override character max HP (enter '-1' to return) ---")
-        println("### WARNING: Maximum HP override value will be overwritten if character's level, class, or CON score is changed. ###")
+        t.println(red("### WARNING: Maximum HP override value will be overwritten if character's level, class, or CON score is changed. ###"))
         do{
-            print("Enter new max HP value: ")
-            tempHP = readln()!!
+            tempHP = t.prompt(brightBlue("Enter max HP value"))!!
 
             if (validateShortToNum(tempHP, 1, 32767)){ //Armour class cannot be below 1
                 hpValidated = true
                 character.maxHP = tempHP.toShort()
             }else if (tempHP == "-1"){
+                t.println(rgb("#ff9393")("Returning..."))
                 return false
             }else{
-                println("Invalid input: Max HP must be a valid number between 1 and 32767.")
+                t.println(red("Invalid input: Max HP must be a valid number between 1 and 32767."))
             }
         } while (!hpValidated)
 

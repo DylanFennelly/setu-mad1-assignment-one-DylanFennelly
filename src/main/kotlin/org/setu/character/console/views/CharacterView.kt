@@ -206,7 +206,7 @@ class CharacterView {
         return option
     }
 
-    fun listItemAddOptions() : Int{     //add menu
+    fun listItemAddOptions(update: Boolean) : Int{     //add menu
         var option : Int
         var input: String?
 
@@ -219,8 +219,12 @@ class CharacterView {
         t.println(" ${green("6.")} Attunement")
         t.println(" ${green("7.")} Equipped")
         t.println()
-        t.println(" ${green("8.")} Create item")
-        t.println(" ${green("-1.")} Cancel item creation")
+        if (update){            //menu is used for both create and update, but want different things to be printed
+            t.println(" ${green("-1.")} Return to previous menu")
+        }else{
+            t.println(" ${green("8.")} Create item")
+            t.println(" ${green("-1.")} Cancel item creation")
+        }
         t.println()
         input = t.prompt(brightBlue("Enter Option"))!!
         option = if (input.toIntOrNull() != null && !input.isEmpty())
@@ -273,13 +277,13 @@ class CharacterView {
         }
     }
 
-    fun listCharactersItems(character: CharacterModel){
+    fun listCharactersItems(character: CharacterModel):Boolean{
         if (character.items.isNotEmpty()){
             t.println(table{            //creates table to display character attributes
                 align = TextAlign.CENTER
                 header {
                     style(green, bold = true)
-                    row("ID","Name", "Type", "Rarity", "Cost", "Attuned", "Equipped")  }
+                    row("ID","Name", "Type", "Rarity", "Cost (GP)", "Attuned", "Equipped")  }
                 body {
                     character.items.forEachIndexed { index, item ->
                         row(green(index.toString()), item.name, item.itemType, item.rarity, item.cost, item.attunement, item.equipped)
@@ -288,6 +292,10 @@ class CharacterView {
                     }
                 }
             })
+            return true
+        }else{
+            t.println(red("Error: No items have been created for this character yet."))
+            return false
         }
     }
 
@@ -296,10 +304,9 @@ class CharacterView {
             t.println(table{            //creates table to display character attributes
                 align = TextAlign.CENTER
                 header {
-                    style(bold = true)
+                    style(green,bold = true)
                     row("Name", "Race", "Class", "Level", "STR", "DEX", "CON", "INT", "WIS", "CHA", "Background", "Max HP", "AC", "No. Items")  }
                 body {
-                    style(green)
                     row(character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac, character.items.size) }
             })
         else
@@ -311,12 +318,12 @@ class CharacterView {
             t.println(table{            //creates table to display item attributes
                 align = TextAlign.CENTER
                 header {
-                    style(bold = true)
-                    row("Name", "Type", "Rarity", "Cost", "Attuned", "Equipped") }
+                    style(green,bold = true)
+                    row("Name", "Type", "Rarity", "Cost (GP)", "Attuned", "Equipped") }
                 body {
-                    row(green(item.name), green(item.itemType), green(item.rarity), green(item.cost.toString()), green(item.attunement.toString()), green(item.equipped.toString()))
+                    row(item.name, item.itemType, item.rarity, item.cost.toString(), item.attunement.toString(), item.equipped.toString())
                     row {cell("Decription") {columnSpan = 6} }
-                    row { cell(green(item.desc)) {columnSpan = 6} }
+                    row { cell(item.desc) {columnSpan = 6} }
                 }
             })
         else
@@ -530,6 +537,17 @@ class CharacterView {
         strId = t.prompt(brightBlue("Enter character ID"))!!
         searchId = if (strId.toLongOrNull() != null && !strId.isEmpty())
             strId.toLong()
+        else
+            -9
+        return searchId
+    }
+
+    fun getItemId() : Int {
+        var strId : String? // String to hold user input
+        var searchId : Int // Long to hold converted id
+        strId = t.prompt(brightBlue("Enter item ID"))!!
+        searchId = if (strId.toIntOrNull() != null && !strId.isEmpty())
+            strId.toInt()
         else
             -9
         return searchId

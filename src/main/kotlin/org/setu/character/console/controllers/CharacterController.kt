@@ -194,7 +194,7 @@ class CharacterController {
                         8 -> {
                             if (updateHP(aCharacter)) {
                                 updateCharacter(aCharacter, searchId)
-
+                                t.println(green("Max HP updated!"))
                             }
                         }
 
@@ -472,7 +472,7 @@ class CharacterController {
             val input: Int = characterView.listItemOptions()
             when(input) {
                 1 -> addItem(character)
-                2 -> t.println("Update item")
+                2 -> updateItemMenu(character)
                 3 -> t.println("Delete item")
                 -1 -> {}
                 else -> t.println(red("Error: Invalid option entered."))
@@ -484,7 +484,7 @@ class CharacterController {
     fun addItem(character: CharacterModel){
         var anItem = ItemModel()
         var exitMenu = false        //boolean to check if menu has been exited, flipped to true upon exit confirmation
-        t.println(menuHeadingStyle("==============    Create New Character    =============="))
+        t.println(menuHeadingStyle("================    Create New Item     ================"))
         t.println(menuHeadingStyle("While entering values, enter '-1' to return to this menu"))
         t.println(menuHeadingStyle("========================================================"))
 
@@ -493,7 +493,7 @@ class CharacterController {
             t.println(green("============   Current item attributes   ============"))
             characterView.showItem(anItem)
 
-            val input: Int = characterView.listItemAddOptions()
+            val input: Int = characterView.listItemAddOptions(false)
             when(input) {
                 1 -> characterView.updateItemName(anItem)
                 2 -> characterView.updateItemType(anItem)
@@ -537,6 +537,82 @@ class CharacterController {
         } while (!exitMenu)
     }
 
+    fun updateItemMenu(character: CharacterModel) {
+        val itemsExist = character.items.isNotEmpty()
+        if (itemsExist) {
+            var searchId = characterView.getItemId()
+            val aItem = searchItems(searchId, character)
+
+            if (aItem != null) {
+                t.println(menuHeadingStyle("==================    Update Item     =================="))
+                t.println(menuHeadingStyle("While entering values, enter '-1' to return to this menu"))
+                t.println(menuHeadingStyle("========================================================"))
+                do {
+                    t.println()
+                    t.println(green("============   Current item attributes   ============"))
+                    characterView.showItem(aItem)
+                    val input: Int = characterView.listItemAddOptions(true)
+                    when (input) {
+                        1 -> {
+                            if (characterView.updateItemName(aItem)) {
+                                updateItem(character, aItem, searchId)
+                                t.println(green("Name updated!"))
+                            }
+                        }
+
+                        2 -> {
+                            if (characterView.updateItemType(aItem)) {
+                                updateItem(character, aItem, searchId)
+                                t.println(green("Type updated!"))
+                            }
+                        }
+
+                        3 -> {
+                            if (updateItemRarity(aItem)) {
+                                updateItem(character, aItem, searchId)
+                                t.println(green("Rarity updated!"))
+                            }
+                        }
+
+                        4 -> {
+                            if (characterView.updateItemDescription(aItem)) {
+                                updateItem(character, aItem, searchId)
+                                t.println(green("Description updated!"))
+                            }
+                        }
+
+                        5 -> {
+                            if (characterView.updateItemCost(aItem)) {
+                                updateItem(character, aItem, searchId)
+                                t.println(green("Cost updated!"))
+                            }
+                        }
+
+                        6 -> {
+                            characterView.updateItemAttunement(aItem)
+                            updateItem(character, aItem, searchId)
+                            t.println(green("Attunement updated!"))
+
+                        }
+
+                        7 -> {
+                            val equip = characterView.updateItemEquip(aItem)
+                            updateItem(character, aItem, searchId)
+                            if (equip)
+                                t.println(green("Item equipped!"))
+                            else
+                                t.println(green("Item unequipped!"))
+                        }
+
+                        -1 -> {}        //empty function to prevent error message printing upon -1 entry
+                        else -> t.println(red("Error: Invalid option entered."))
+                    }
+                } while (input != -1)
+            } else
+                t.println(red("Error: No Item with ID $searchId found"))
+        }
+    }
+
     fun updateItemRarity (item: ItemModel) : Boolean {
         var rarityChosen = false
         do {
@@ -558,5 +634,20 @@ class CharacterController {
     fun createItem(character: CharacterModel, item: ItemModel){
         characters.addItemToCharacter(character, item)
         logger.info("Item Added to ${character.name} : [ $item ]")
+    }
+
+    fun updateItem( character: CharacterModel, item: ItemModel, index: Int){
+        characters.updateItem(character, item, index)
+        logger.info("Character Updated : [ $character ]")
+        Thread.sleep(100)       //wait to prevent logger from printing in the middle of table prints
+    }
+
+    fun searchItems(id: Int, character: CharacterModel) : ItemModel? {
+        if (id != -1 && id> -2 && id< character.items.size) {     //validating against index out of bounds errors
+            return characters.findOneItem(character, id)
+        }else if (id == -1) {       //if user request to go back
+            t.println(rgb("#ff9393")("Returning..."))
+        }
+        return null
     }
 }

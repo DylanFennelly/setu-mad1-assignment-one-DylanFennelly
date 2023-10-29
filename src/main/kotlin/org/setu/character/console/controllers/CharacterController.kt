@@ -473,7 +473,7 @@ class CharacterController {
             when(input) {
                 1 -> addItem(character)
                 2 -> updateItemMenu(character)
-                3 -> t.println("Delete item")
+                3 -> deleteItem(character)
                 -1 -> {}
                 else -> t.println(red("Error: Invalid option entered."))
             }
@@ -610,6 +610,29 @@ class CharacterController {
                 } while (input != -1)
             } else
                 t.println(red("Error: No Item with ID $searchId found"))
+        }
+    }
+
+    fun deleteItem(character: CharacterModel){
+        val itemsExist = character.items.isNotEmpty()
+        if (itemsExist) {
+            var searchId = characterView.getItemId()
+            val aItem = searchItems(searchId, character)
+
+            if (aItem != null) {
+                characterView.showItem(aItem)
+                t.println(red("Are you sure you want to delete this item? Deletion cannot be undone, and this item's data will be lost forever!"))
+                val exitConfirm = t.prompt(brightBlue("Delete item?"), choices = listOf("yes", "no"))
+                if (exitConfirm == "yes") {      //delete confirmation: must type character name to confirm deletion
+                    characters.deleteItem(character, aItem)
+                    t.println(rgb("#ff9393")("Item deleted."))
+                    logger.info("Character Deleted : [ $aItem ]")
+                }else {
+                    t.println(rgb("#ff9393")("Aborting Item deletion..."))
+                }
+            } else {
+                t.println(red("Error: No Character with ID $searchId found"))
+            }
         }
     }
 

@@ -14,17 +14,7 @@
     "maxHP": 25,
     "ac": 10,
     "background": "Outlander",
-    "items": [
-      {
-        "name": "Greatsword +2",
-        "itemType": "Weapon",
-        "rarity": "Rare",
-        "desc": "You have a +2 bonus to attack and damage rolls made with this magic weapon.",
-        "cost": 1000,
-        "attunement": true,
-        "equipped": true
-      }
-    ]
+    "items": []
   },
   {
     "id": 2731012547597339050,

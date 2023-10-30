@@ -253,6 +253,27 @@ class CharacterView {
         return option
     }
 
+    fun listSearchOptions() : Int{
+        var option : Int
+        var input: String?
+
+        t.println(titleStyle("Select attribute to search by"))
+        t.println(" ${green("1.")} Level        ${green("6.")} Background")
+        t.println(" ${green("2.")} Name         ${green("7.")} Armour Class")
+        t.println(" ${green("3.")} Race         ${green("8.")} Max HP")
+        t.println(" ${green("4.")} Class        ${green("9.")} ID")
+        t.println(" ${green("5.")} Ability Scores")
+        t.println()
+        t.println(" ${green("-1.")} Return to main menu")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
+        option = if (input.toIntOrNull() != null && !input.isEmpty())
+            input.toInt()
+        else
+            -9
+        return option
+    }
+
     fun listCharacters(characters : CharacterStore): Boolean {
         if (characters.findAll().isNotEmpty()){         //if there are characters to display
             t.println(titleStyle("List All Characters"))

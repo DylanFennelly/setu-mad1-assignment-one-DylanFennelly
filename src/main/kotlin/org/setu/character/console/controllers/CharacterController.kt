@@ -250,16 +250,41 @@ class CharacterController {
     }
 
     fun search() {
-        val charsExist = characterView.listCharacters(characters)
-        if (charsExist) {
-            var searchId = characterView.getId()
-            val aCharacter = search(searchId)
-
-            if (aCharacter != null) {
+        if (characters.findAll().isNotEmpty()) {
+            t.println()
+            t.println(menuHeadingStyle("=================   Search Characters  ================="))
+            t.println(menuHeadingStyle("While entering values, enter '-1' to return to this menu"))
+            t.println(menuHeadingStyle("========================================================"))
+            do {
+                val input: Int = characterView.listSearchOptions()
+                when (input) {
+                    1 -> t.println("Level")
+                    2 -> t.println("Name")
+                    3 -> t.println("Race")
+                    4 -> t.println("Class")
+                    5 -> t.println("Ability Scores")
+                    6 -> t.println("Background")
+                    7 -> t.println("Armour Class")
+                    8 -> t.println("Max HP")
+                    9 -> t.println("ID")
+                    -1 -> {}
+                    else -> t.println(red("Error: Invalid option entered."))
+                }
                 t.println()
-                characterView.showCharacter(aCharacter, true)
-            }else
-                t.println(red("Error: No Character with ID $searchId found"))
+            } while (input != -1)
+//        val charsExist = characterView.listCharacters(characters)
+//        if (charsExist) {
+//            var searchId = characterView.getId()
+//            val aCharacter = search(searchId)
+//
+//            if (aCharacter != null) {
+//                t.println()
+//                characterView.showCharacter(aCharacter, true)
+//            }else
+//                t.println(red("Error: No Character with ID $searchId found"))
+//        }
+        }else{
+            t.println(red("Error: No characters have been created yet."))
         }
     }
 

@@ -14,6 +14,7 @@ import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal       //https://github.com/ajalt/mordant
 import org.setu.character.console.models.ItemModel
+import java.util.*
 
 class CharacterController {
 
@@ -493,18 +494,19 @@ class CharacterController {
         var inputValidated = false
         do {
             var searchName: String = t.prompt(brightBlue("Enter character name to search"))!!
+            searchName = searchName.trim()
             if (searchName.isNotEmpty() && searchName != "-1") {
                 inputValidated = true
                 var matches: MutableList<CharacterModel> =
                     mutableListOf()      //list of matches to build up search results
                 characters.findAll().forEach { character ->
-                    if (searchName in character.name) {               //if character name contains searched name
+                    if (searchName.lowercase() in character.name.lowercase()) {               //if character name contains searched name
                         matches.add(character)
                     }
                 }
                 if (matches.isNotEmpty()) {
                     if (matches.size == 1)      //if only 1 match, display character
-                        characterView.showCharacter(matches[0])
+                        characterView.showCharacter(matches[0], true)
                     else
                         characterView.listCharacters(matches)
                 } else {

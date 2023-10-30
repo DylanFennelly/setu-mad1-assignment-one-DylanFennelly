@@ -253,6 +253,27 @@ class CharacterView {
         return option
     }
 
+    fun listSearchOptions() : Int{
+        var option : Int
+        var input: String?
+
+        t.println(titleStyle("Select attribute to search by"))
+        t.println(" ${green("1.")} Level        ${green("6.")} Background")
+        t.println(" ${green("2.")} Name         ${green("7.")} Armour Class")
+        t.println(" ${green("3.")} Race         ${green("8.")} Max HP")
+        t.println(" ${green("4.")} Class        ${green("9.")} ID")
+        t.println(" ${green("5.")} Ability Scores")
+        t.println()
+        t.println(" ${green("-1.")} Return to main menu")
+        t.println()
+        input = t.prompt(brightBlue("Enter Option"))!!
+        option = if (input.toIntOrNull() != null && !input.isEmpty())
+            input.toInt()
+        else
+            -9
+        return option
+    }
+
     fun listCharacters(characters : CharacterStore): Boolean {
         if (characters.findAll().isNotEmpty()){         //if there are characters to display
             t.println(titleStyle("List All Characters"))
@@ -266,6 +287,30 @@ class CharacterView {
                     row("ID","Name", "Race", "Class", "Level", "STR", "DEX", "CON", "INT", "WIS", "CHA", "Background", "Max HP", "AC")  }
                 body {
                     characters.findAll().forEachIndexed { index, character ->
+                        row(index, character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac)
+                    }
+                }
+            })
+            return true
+        }else{
+            t.println(red("Error: No characters have been created yet."))
+            return false
+        }
+    }
+
+    fun listCharacters(characters : MutableList<CharacterModel>): Boolean {     //overload of listCharacters for search functions
+        if (characters.isNotEmpty()){         //if there are characters to display
+            t.println(titleStyle("List All Characters"))
+            t.println(table{            //creates table to display character attributes
+                align = TextAlign.CENTER
+                column(0){
+                    style = green
+                }
+                header {
+                    style(green, bold = true)
+                    row("ID","Name", "Race", "Class", "Level", "STR", "DEX", "CON", "INT", "WIS", "CHA", "Background", "Max HP", "AC")  }
+                body {
+                    characters.forEachIndexed { index, character ->
                         row(index, character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac)
                     }
                 }
@@ -363,6 +408,7 @@ class CharacterView {
         var nameValidated = false
         do{
             tempName = t.prompt(brightBlue("Enter Character Name"))!!
+            tempName = tempName.trim()
             if (tempName.isNotEmpty() && tempName != "-1") {
                 nameValidated = true
                 character.name = tempName
@@ -447,6 +493,7 @@ class CharacterView {
         var nameValidated = false
         do{
             tempName = t.prompt(brightBlue("Enter Item Name"))!!
+            tempName = tempName.trim()
             if (tempName.isNotEmpty() && tempName != "-1") {
                 nameValidated = true
                 item.name = tempName
@@ -465,6 +512,7 @@ class CharacterView {
         var typeValidated = false
         do{
             tempType = t.prompt(brightBlue("Enter Item Type"))!!
+            tempType = tempType.trim()
             if (tempType.isNotEmpty() && tempType != "-1") {
                 typeValidated = true
                 item.itemType = tempType
@@ -481,6 +529,7 @@ class CharacterView {
     fun updateItemDescription(item: ItemModel): Boolean {
         var tempDesc : String?
             tempDesc = t.prompt(brightBlue("Enter Item Description"))!!
+            tempDesc.trim()
             if (tempDesc != "-1") {     //we don't care if description is empty
                 if (tempDesc.isEmpty()){
                     t.println(red("No input was entered. This will clear the description. Do you want to clear the description?"))
@@ -519,7 +568,7 @@ class CharacterView {
     }
 
     fun updateItemAttunement(item: ItemModel): Boolean{
-        val response = t.prompt(brightBlue("Does this item require?"), choices = listOf("yes", "no"))
+        val response = t.prompt(brightBlue("Does this item require attunement?"), choices = listOf("yes", "no"))
         return if (response == "yes"){
             item.attunement = true
             true

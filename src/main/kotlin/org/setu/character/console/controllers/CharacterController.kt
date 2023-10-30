@@ -229,7 +229,7 @@ class CharacterController {
                     do {
                         typedName =
                             t.prompt(brightBlue("Enter character name to confirm deletion (or type -1 to cancel deletion)"))
-                        matchingName = typedName.equals(aCharacter.name)
+                        matchingName = typedName?.trim().equals(aCharacter.name)
                         if (!matchingName && !typedName.equals("-1")) {
                             t.println(red("Error: Entered name does not match character name"))
                         }

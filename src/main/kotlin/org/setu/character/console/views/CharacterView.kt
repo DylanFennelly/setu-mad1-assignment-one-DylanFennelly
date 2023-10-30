@@ -408,6 +408,7 @@ class CharacterView {
         var nameValidated = false
         do{
             tempName = t.prompt(brightBlue("Enter Character Name"))!!
+            tempName = tempName.trim()
             if (tempName.isNotEmpty() && tempName != "-1") {
                 nameValidated = true
                 character.name = tempName
@@ -492,6 +493,7 @@ class CharacterView {
         var nameValidated = false
         do{
             tempName = t.prompt(brightBlue("Enter Item Name"))!!
+            tempName = tempName.trim()
             if (tempName.isNotEmpty() && tempName != "-1") {
                 nameValidated = true
                 item.name = tempName
@@ -510,6 +512,7 @@ class CharacterView {
         var typeValidated = false
         do{
             tempType = t.prompt(brightBlue("Enter Item Type"))!!
+            tempType = tempType.trim()
             if (tempType.isNotEmpty() && tempType != "-1") {
                 typeValidated = true
                 item.itemType = tempType
@@ -526,6 +529,7 @@ class CharacterView {
     fun updateItemDescription(item: ItemModel): Boolean {
         var tempDesc : String?
             tempDesc = t.prompt(brightBlue("Enter Item Description"))!!
+            tempDesc.trim()
             if (tempDesc != "-1") {     //we don't care if description is empty
                 if (tempDesc.isEmpty()){
                     t.println(red("No input was entered. This will clear the description. Do you want to clear the description?"))

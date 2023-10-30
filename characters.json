@@ -1,17 +1,17 @@
 [
   {
-    "id": -7639084839773696590,
+    "id": -3755232460771277074,
     "name": "Rylanor",
-    "race": "Half-Orc",
+    "race": "Human",
     "battleClass": "Barbarian",
-    "level": 2,
+    "level": 1,
     "str": 18,
     "dex": 14,
     "con": 16,
     "int": 7,
     "wis": 10,
     "cha": 8,
-    "maxHP": 25,
+    "maxHP": 15,
     "ac": 10,
     "background": "Outlander",
     "items": [
@@ -36,24 +36,34 @@
     ]
   },
   {
-    "id": 2731012547597339050,
+    "id": 8459464320642127241,
     "name": "Cyn",
     "race": "Half-Elf",
     "battleClass": "Ranger",
-    "level": 1,
+    "level": 2,
     "str": 10,
     "dex": 16,
     "con": 15,
     "int": 8,
     "wis": 12,
     "cha": 10,
-    "maxHP": 12,
+    "maxHP": 20,
     "ac": 10,
     "background": "Criminal",
-    "items": []
+    "items": [
+      {
+        "name": "Crossbow +2",
+        "itemType": "Weapon",
+        "rarity": "Rare",
+        "desc": "You have a +2 bonus to attack and damage rolls made with this magic weapon.",
+        "cost": 2000,
+        "attunement": true,
+        "equipped": true
+      }
+    ]
   },
   {
-    "id": -2207832459939051561,
+    "id": -1033140381347457418,
     "name": "Leona van der Vastenholt",
     "race": "Human",
     "battleClass": "Sorcerer",

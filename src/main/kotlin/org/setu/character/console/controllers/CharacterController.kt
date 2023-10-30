@@ -259,35 +259,23 @@ class CharacterController {
                 val input: Int = characterView.listSearchOptions()
                 when (input) {
                     1 -> t.println("Level")
-                    2 -> t.println("Name")
+                    2 -> searchByName()
                     3 -> t.println("Race")
                     4 -> t.println("Class")
                     5 -> t.println("Ability Scores")
                     6 -> t.println("Background")
                     7 -> t.println("Armour Class")
                     8 -> t.println("Max HP")
-                    9 -> t.println("ID")
+                    9 -> searchByID()
                     -1 -> {}
                     else -> t.println(red("Error: Invalid option entered."))
                 }
                 t.println()
             } while (input != -1)
-//        val charsExist = characterView.listCharacters(characters)
-//        if (charsExist) {
-//            var searchId = characterView.getId()
-//            val aCharacter = search(searchId)
-//
-//            if (aCharacter != null) {
-//                t.println()
-//                characterView.showCharacter(aCharacter, true)
-//            }else
-//                t.println(red("Error: No Character with ID $searchId found"))
-//        }
         }else{
             t.println(red("Error: No characters have been created yet."))
         }
     }
-
 
     fun search(id: Long) : CharacterModel? {
         if (id.toInt() != -1 && id.toInt() > -2 && id.toInt() < characters.characters.size) {     //validating against index out of bounds errors
@@ -343,6 +331,7 @@ class CharacterController {
         characters.create(character1)
         var character2 = CharacterModel(9218356089001388513, "Cyn", "Half-Elf", "Ranger", 2, 10, 16, 15, 8, 12, 10, 20, 10, "Criminal")
         character2.items.add(ItemModel("Crossbow +2", "Weapon", "Rare","You have a +2 bonus to attack and damage rolls made with this magic weapon.", 2000u, true, true ))
+        characters.create(character2)
         characters.create(CharacterModel(747018093021143261, "Leona van der Vastenholt", "Human", "Sorcerer", 1, 8, 14, 14, 14, 12, 19, 8, 10, "Sage"))
     }
 
@@ -488,6 +477,48 @@ class CharacterController {
         logger.info("Character Updated : [ $character ]")
         Thread.sleep(100)       //wait to prevent logger from printing in the middle of table prints
     }
+
+    fun searchByID(){
+        var searchId = characterView.getId()
+        val aCharacter = search(searchId)
+
+        if (aCharacter != null) {
+            t.println()
+            characterView.showCharacter(aCharacter, true)
+        } else
+            t.println(red("Error: No Character with ID $searchId found"))
+    }
+
+    fun searchByName() {
+        var inputValidated = false
+        do {
+            var searchName: String = t.prompt(brightBlue("Enter character name to search"))!!
+            if (searchName.isNotEmpty() && searchName != "-1") {
+                inputValidated = true
+                var matches: MutableList<CharacterModel> =
+                    mutableListOf()      //list of matches to build up search results
+                characters.findAll().forEach { character ->
+                    if (searchName in character.name) {               //if character name contains searched name
+                        matches.add(character)
+                    }
+                }
+                if (matches.isNotEmpty()) {
+                    if (matches.size == 1)      //if only 1 match, display character
+                        characterView.showCharacter(matches[0])
+                    else
+                        characterView.listCharacters(matches)
+                } else {
+                    t.println(red("Error: No characters found for input search term."))
+                }
+            } else if (searchName == "-1") {
+                t.println(rgb("#ff9393")("Returning..."))
+                inputValidated = true
+            }else{
+                t.println(red("Error: Input must not be empty."))
+            }
+        }while (!inputValidated)
+    }
+
 
 //items
     fun itemsMenu(character: CharacterModel){

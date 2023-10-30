@@ -298,6 +298,30 @@ class CharacterView {
         }
     }
 
+    fun listCharacters(characters : MutableList<CharacterModel>): Boolean {     //overload of listCharacters for search functions
+        if (characters.isNotEmpty()){         //if there are characters to display
+            t.println(titleStyle("List All Characters"))
+            t.println(table{            //creates table to display character attributes
+                align = TextAlign.CENTER
+                column(0){
+                    style = green
+                }
+                header {
+                    style(green, bold = true)
+                    row("ID","Name", "Race", "Class", "Level", "STR", "DEX", "CON", "INT", "WIS", "CHA", "Background", "Max HP", "AC")  }
+                body {
+                    characters.forEachIndexed { index, character ->
+                        row(index, character.name, character.race, character.battleClass, character.level, character.str, character.dex, character.con, character.int, character.wis, character.cha, character.background, character.maxHP, character.ac)
+                    }
+                }
+            })
+            return true
+        }else{
+            t.println(red("Error: No characters have been created yet."))
+            return false
+        }
+    }
+
     fun listCharactersItems(character: CharacterModel):Boolean{
         val headerStyle = (green + bold)
         if (character.items.isNotEmpty()){

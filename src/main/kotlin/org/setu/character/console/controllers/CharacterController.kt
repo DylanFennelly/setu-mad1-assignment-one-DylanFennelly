@@ -13,8 +13,9 @@ import com.github.ajalt.mordant.rendering.TextColors.Companion.rgb
 import com.github.ajalt.mordant.rendering.TextStyles.*
 import com.github.ajalt.mordant.table.table
 import com.github.ajalt.mordant.terminal.Terminal       //https://github.com/ajalt/mordant
+import org.setu.character.console.helpers.validateByteToNum
+import org.setu.character.console.helpers.validateShortToNum
 import org.setu.character.console.models.ItemModel
-import java.util.*
 
 class CharacterController {
 
@@ -259,14 +260,14 @@ class CharacterController {
             do {
                 val input: Int = characterView.listSearchOptions()
                 when (input) {
-                    1 -> t.println("Level")
+                    1 -> searchByLevel()
                     2 -> searchByName()
-                    3 -> t.println("Race")
-                    4 -> t.println("Class")
-                    5 -> t.println("Ability Scores")
-                    6 -> t.println("Background")
-                    7 -> t.println("Armour Class")
-                    8 -> t.println("Max HP")
+                    3 -> searchByRace()
+                    4 -> searchByClass()
+                    5 -> searchByAbility()
+                    6 -> searchByBackground()
+                    7 -> searchByAC()
+                    8 -> searchByHP()
                     9 -> searchByID()
                     -1 -> {}
                     else -> t.println(red("Error: Invalid option entered."))
@@ -330,7 +331,7 @@ class CharacterController {
         character1.items.add(ItemModel("Greatsword", "Weapon", "Common", "Standard issue greatsword.", 50u, false, true))
         character1.items.add(ItemModel("Bag of Holding", "Wonderous item", "Uncommon", "This mysterious bag seems to have an infinitely large capacity", 200u, false, true))
         characters.create(character1)
-        var character2 = CharacterModel(9218356089001388513, "Cyn", "Half-Elf", "Ranger", 2, 10, 16, 15, 8, 12, 10, 20, 10, "Criminal")
+        var character2 = CharacterModel(9218356089001388513, "Cyn", "Half-Elf", "Ranger", 2, 10, 16, 15, 8, 12, 10, 20, 13, "Criminal")
         character2.items.add(ItemModel("Crossbow +2", "Weapon", "Rare","You have a +2 bonus to attack and damage rolls made with this magic weapon.", 2000u, true, true ))
         characters.create(character2)
         characters.create(CharacterModel(747018093021143261, "Leona van der Vastenholt", "Human", "Sorcerer", 1, 8, 14, 14, 14, 12, 19, 8, 10, "Sage"))
@@ -497,8 +498,7 @@ class CharacterController {
             searchName = searchName.trim()
             if (searchName.isNotEmpty() && searchName != "-1") {
                 inputValidated = true
-                var matches: MutableList<CharacterModel> =
-                    mutableListOf()      //list of matches to build up search results
+                var matches: MutableList<CharacterModel> = mutableListOf()      //list of matches to build up search results
                 characters.findAll().forEach { character ->
                     if (searchName.lowercase() in character.name.lowercase()) {               //if character name contains searched name
                         matches.add(character)
@@ -507,7 +507,7 @@ class CharacterController {
                 if (matches.isNotEmpty()) {
                     if (matches.size == 1)      //if only 1 match, display character
                         characterView.showCharacter(matches[0], true)
-                    else
+                    else                        //if multiple matches, display all
                         characterView.listCharacters(matches)
                 } else {
                     t.println(red("Error: No characters found for input search term."))
@@ -521,6 +521,461 @@ class CharacterController {
         }while (!inputValidated)
     }
 
+    fun searchByRace() {
+        var exitSearch = false
+        var raceChosen = false
+        var searchRace: String = ""
+        //select
+        do {
+            val input: Int = characterView.listRaces()
+            when(input){
+                1 -> {searchRace = "Dragonborn"; raceChosen = true}
+                2 -> {searchRace = "Dwarf"; raceChosen = true}
+                3 -> {searchRace = "Elf"; raceChosen = true}
+                4 -> {searchRace = "Gnome"; raceChosen = true}
+                5 -> {searchRace = "Half-Elf"; raceChosen = true}
+                6 -> {searchRace = "Half-Orc"; raceChosen = true}
+                7 -> {searchRace = "Halfling"; raceChosen = true}
+                8 -> {searchRace = "Human"; raceChosen = true}
+                9 -> {searchRace = "Tiefling"; raceChosen = true}
+                -1 -> {t.println(rgb("#ff9393")("Returning...")); exitSearch = true}
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            t.println()
+        } while (input != -1 && !raceChosen)    //loops menu until valid selection is made (race updated) or -1 is entered
+
+        //search
+        if (!exitSearch){   //if -1 was not input
+            var matches: MutableList<CharacterModel> = mutableListOf()      //list of matches to build up search results
+            characters.findAll().forEach { character ->
+                if (searchRace == character.race) {               //if character race is same as search race
+                    matches.add(character)
+                }
+            }
+            if (matches.isNotEmpty()) {
+                if (matches.size == 1)      //if only 1 match, display character
+                    characterView.showCharacter(matches[0], true)
+                else
+                    characterView.listCharacters(matches)
+            } else {
+                t.println(red("Error: No characters found for input search term."))
+            }
+        }
+    }
+
+    fun searchByClass() {
+        var exitSearch = false
+        var classChosen = false
+        var searchClass: String = ""
+        //select
+        do {
+            val input: Int = characterView.listClasses()
+            when(input){
+                1 -> {searchClass = "Barbarian"; classChosen = true}
+                2 -> {searchClass = "Bard"; classChosen = true}
+                3 -> {searchClass = "Cleric"; classChosen = true}
+                4 -> {searchClass = "Druid"; classChosen = true}
+                5 -> {searchClass = "Fighter"; classChosen = true}
+                6 -> {searchClass = "Monk"; classChosen = true}
+                7 -> {searchClass = "Paladin"; classChosen = true}
+                8 -> {searchClass = "Ranger"; classChosen = true}
+                9 -> {searchClass = "Rouge"; classChosen = true}
+                10 -> {searchClass = "Sorcerer"; classChosen = true}
+                11 -> {searchClass = "Warlock"; classChosen = true}
+                12 -> {searchClass = "Wizard"; classChosen = true}
+                -1 -> {t.println(rgb("#ff9393")("Returning...")); exitSearch = true}
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            t.println()
+        } while (input != -1 && !classChosen)    //loops menu until valid selection is made (race updated) or -1 is entered
+
+        //search
+        if (!exitSearch){   //if -1 was not input
+            var matches: MutableList<CharacterModel> = mutableListOf()      //list of matches to build up search results
+            characters.findAll().forEach { character ->
+                if (searchClass == character.battleClass) {
+                    matches.add(character)
+                }
+            }
+            if (matches.isNotEmpty()) {
+                if (matches.size == 1)      //if only 1 match, display character
+                    characterView.showCharacter(matches[0], true)
+                else
+                    characterView.listCharacters(matches)
+            } else {
+                t.println(red("Error: No characters found for input search term."))
+            }
+        }
+    }
+
+    fun searchByBackground() {
+        var exitSearch = false
+        var bgChosen = false
+        var searchBG: String = ""
+        //select
+        do {
+            val input: Int = characterView.listBackgrounds()
+            when(input){
+                1 -> {searchBG = "Acolyte"; bgChosen = true}
+                2 -> {searchBG = "Charlatan"; bgChosen = true}
+                3 -> {searchBG = "Criminal"; bgChosen = true}
+                4 -> {searchBG = "Entertainer"; bgChosen = true}
+                5 -> {searchBG = "Folk Hero"; bgChosen = true}
+                6 -> {searchBG = "Guild Artisan"; bgChosen = true}
+                7 -> {searchBG = "Hermit"; bgChosen = true}
+                8 -> {searchBG = "Noble"; bgChosen = true}
+                9 -> {searchBG = "Outlander"; bgChosen = true}
+                10 -> {searchBG = "Sage"; bgChosen = true}
+                11 -> {searchBG = "Sailor"; bgChosen = true}
+                12 -> {searchBG = "Solider"; bgChosen = true}
+                13 -> {searchBG = "Urchin"; bgChosen = true}
+                -1 -> {t.println(rgb("#ff9393")("Returning...")); exitSearch = true}
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            t.println()
+        } while (input != -1 && !bgChosen)    //loops menu until valid selection is made (race updated) or -1 is entered
+
+        //search
+        if (!exitSearch){   //if -1 was not input
+            var matches: MutableList<CharacterModel> = mutableListOf()      //list of matches to build up search results
+            characters.findAll().forEach { character ->
+                if (searchBG == character.background) {
+                    matches.add(character)
+                }
+            }
+            if (matches.isNotEmpty()) {
+                if (matches.size == 1)      //if only 1 match, display character
+                    characterView.showCharacter(matches[0], true)
+                else
+                    characterView.listCharacters(matches)
+            } else {
+                t.println(red("Error: No characters found for input search term."))
+            }
+        }
+    }
+
+    fun searchByLevel() {
+        var inputValidated = false
+        do {
+            var searchLevel: String = t.prompt(brightBlue("Enter character level to search"))!!
+            searchLevel = searchLevel.trim()
+            if (validateByteToNum(searchLevel, 1, 20)) {
+                val response = t.prompt(brightBlue("Do you want to search for same level, above level, or below level characters?"), choices = listOf("same", "above", "below"))
+                inputValidated = true
+                var matches: MutableList<CharacterModel> = mutableListOf()      //list of matches to build up search results
+                if (response == "same") {            //if looking for characters of same level
+                    characters.findAll().forEach { character ->
+                        if (searchLevel.toByte() == character.level) {
+                            matches.add(character)
+                        }
+                    }
+                }else if (response == "above"){     //if looking for above input
+                    characters.findAll().forEach { character ->
+                        if (searchLevel.toByte() < character.level) {
+                            matches.add(character)
+                        }
+                    }
+                }else if (response == "below"){     //if looking for below input
+                    characters.findAll().forEach { character ->
+                        if (searchLevel.toByte() > character.level) {
+                            matches.add(character)
+                        }
+                    }
+                }
+                if (matches.isNotEmpty()) {
+                    if (matches.size == 1)      //if only 1 match, display character
+                        characterView.showCharacter(matches[0], true)
+                    else
+                        characterView.listCharacters(matches)
+                } else {
+                    t.println(red("Error: No characters found for input search term."))
+                }
+            } else if (searchLevel == "-1") {
+                t.println(rgb("#ff9393")("Returning..."))
+                inputValidated = true
+            }else{
+                t.println(red("Invalid input: Character level must be a valid number between 1 and 20."))
+            }
+        }while (!inputValidated)
+    }
+
+    fun searchByAC() {
+        var inputValidated = false
+        do {
+            var searchAC: String = t.prompt(brightBlue("Enter armour class to search"))!!
+            searchAC = searchAC.trim()
+            if (validateByteToNum(searchAC, 1, 20)) {
+                val response = t.prompt(brightBlue("Do you want to search characters with same, above, or below armour class?"), choices = listOf("same", "above", "below"))
+                inputValidated = true
+                var matches: MutableList<CharacterModel> = mutableListOf()      //list of matches to build up search results
+                if (response == "same") {            //if looking for characters of same level
+                    characters.findAll().forEach { character ->
+                        if (searchAC.toByte() == character.ac) {
+                            matches.add(character)
+                        }
+                    }
+                }else if (response == "above"){     //if looking for above input
+                    characters.findAll().forEach { character ->
+                        if (searchAC.toByte() < character.ac) {
+                            matches.add(character)
+                        }
+                    }
+                }else if (response == "below"){     //if looking for below input
+                    characters.findAll().forEach { character ->
+                        if (searchAC.toByte() > character.ac) {
+                            matches.add(character)
+                        }
+                    }
+                }
+                if (matches.isNotEmpty()) {
+                    if (matches.size == 1)      //if only 1 match, display character
+                        characterView.showCharacter(matches[0], true)
+                    else
+                        characterView.listCharacters(matches)
+                } else {
+                    t.println(red("Error: No characters found for input search term."))
+                }
+            } else if (searchAC == "-1") {
+                t.println(rgb("#ff9393")("Returning..."))
+                inputValidated = true
+            }else{
+                t.println(red("Invalid input: Character level must be a valid number between 1 and 20."))
+            }
+        }while (!inputValidated)
+    }
+
+    fun searchByHP() {
+        var inputValidated = false
+        do {
+            var searchHP: String = t.prompt(brightBlue("Enter Max HP to search"))!!
+            searchHP = searchHP.trim()
+            if (validateShortToNum(searchHP, 1, 20)) {
+                val response = t.prompt(brightBlue("Do you want to search characters with same, above, or below HP?"), choices = listOf("same", "above", "below"))
+                inputValidated = true
+                var matches: MutableList<CharacterModel> = mutableListOf()      //list of matches to build up search results
+                if (response == "same") {            //if looking for characters of same level
+                    characters.findAll().forEach { character ->
+                        if (searchHP.toShort() == character.maxHP) {
+                            matches.add(character)
+                        }
+                    }
+                }else if (response == "above"){     //if looking for above input
+                    characters.findAll().forEach { character ->
+                        if (searchHP.toShort() < character.maxHP) {
+                            matches.add(character)
+                        }
+                    }
+                }else if (response == "below"){     //if looking for below input
+                    characters.findAll().forEach { character ->
+                        if (searchHP.toShort() > character.maxHP) {
+                            matches.add(character)
+                        }
+                    }
+                }
+                if (matches.isNotEmpty()) {
+                    if (matches.size == 1)      //if only 1 match, display character
+                        characterView.showCharacter(matches[0], true)
+                    else
+                        characterView.listCharacters(matches)
+                } else {
+                    t.println(red("Error: No characters found for input search term."))
+                }
+            } else if (searchHP == "-1") {
+                t.println(rgb("#ff9393")("Returning..."))
+                inputValidated = true
+            }else{
+                t.println(red("Invalid input: Character level must be a valid number between 1 and 20."))
+            }
+        }while (!inputValidated)
+    }
+
+    fun searchByAbility() {     //186 line method :)
+        var exitSearch = false
+        var abilityChosen = false
+        var searchScore = ""
+        var inputValidated = false
+        //select
+        do {
+            val input: Int = characterView.listAbilityScores()
+            when(input){
+                1 -> {searchScore = "str";abilityChosen = true}
+                2 -> {searchScore = "dex";abilityChosen = true}
+                3 -> {searchScore = "con";abilityChosen = true}
+                4 -> {searchScore = "int";abilityChosen = true}
+                5 -> {searchScore = "wis";abilityChosen = true}
+                6 -> {searchScore = "cha";abilityChosen = true}
+                -1 -> {t.println(rgb("#ff9393")("Returning...")); exitSearch = true}
+                else -> t.println(red("Error: Invalid option entered."))
+            }
+            t.println()
+        } while (input != -1 && !abilityChosen)    //loops menu until valid selection is made (race updated) or -1 is entered
+
+        //search
+        if (!exitSearch) {
+            do {
+                var searchValue: String = t.prompt(brightBlue("Enter ability score value to search"))!!
+                searchValue = searchValue.trim()
+                if (validateByteToNum(searchValue, 1, 30)) {
+                    val response = t.prompt(
+                        brightBlue("Do you want to search characters with same, above, or below ability score?"),
+                        choices = listOf("same", "above", "below")
+                    )
+                    inputValidated = true
+                    var matches: MutableList<CharacterModel> =
+                        mutableListOf()      //list of matches to build up search results
+                    if (response == "same") {            //if looking for characters of same level
+                        when(searchScore){
+                            "str" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() == character.str) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "dex" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() == character.dex) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "con" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() == character.con) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "int" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() == character.int) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "wis" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() == character.wis) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "cha" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() == character.cha) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                        }
+                    } else if (response == "above") {     //if looking for above input
+                        when(searchScore){
+                            "str" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() < character.str) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "dex" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() < character.dex) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "con" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() < character.con) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "int" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() < character.int) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "wis" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() < character.wis) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "cha" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() < character.cha) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                        }
+                    } else if (response == "below") {     //if looking for below input
+                        when(searchScore){
+                            "str" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() > character.str) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "dex" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() > character.dex) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "con" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() > character.con) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "int" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() > character.int) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "wis" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() > character.wis) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                            "cha" -> {
+                                characters.findAll().forEach { character ->
+                                    if (searchValue.toByte() > character.cha) {
+                                        matches.add(character)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (matches.isNotEmpty()) {
+                        if (matches.size == 1)      //if only 1 match, display character
+                            characterView.showCharacter(matches[0], true)
+                        else
+                            characterView.listCharacters(matches)
+                    } else {
+                        t.println(red("Error: No characters found for input search term."))
+                    }
+                } else if (searchValue == "-1") {
+                    t.println(rgb("#ff9393")("Returning..."))
+                    inputValidated = true
+                } else {
+                    t.println(red("Invalid input: Character level must be a valid number between 1 and 20."))
+                }
+            } while (!inputValidated)
+        }
+    }
 
 //items
     fun itemsMenu(character: CharacterModel){

@@ -564,7 +564,7 @@ class CharacterView {
     }
 
     fun updateItemAttunement(item: ItemModel): Boolean{
-        val response = t.prompt(brightBlue("Does this item require?"), choices = listOf("yes", "no"))
+        val response = t.prompt(brightBlue("Does this item require attunement?"), choices = listOf("yes", "no"))
         return if (response == "yes"){
             item.attunement = true
             true
